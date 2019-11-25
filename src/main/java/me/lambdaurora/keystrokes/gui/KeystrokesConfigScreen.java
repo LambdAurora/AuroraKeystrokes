@@ -42,7 +42,7 @@ public class KeystrokesConfigScreen extends Screen
 
     public KeystrokesConfigScreen(@NotNull AuroraKeystrokes mod)
     {
-        super(new LiteralText("Fabric Keystrokes Config"));
+        super(new LiteralText("AuroraKeystrokes Config"));
         this.mod = mod;
     }
 

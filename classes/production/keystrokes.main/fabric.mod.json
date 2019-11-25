@@ -8,11 +8,11 @@
     "LambdAurora"
   ],
   "contact": {
-    "homepage": "",
-    "sources": ""
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/aurorakeystrokes",
+    "sources": "https://github.com/LambdAurora/AuroraKeystrokes.git"
   },
   "license": "GPLv3",
-  "icon": "assets/modid/icon.png",
+  "icon": "assets/aurora_keystrokes/icon.png",
   "environment": "client",
   "entrypoints": {
     "client": [
