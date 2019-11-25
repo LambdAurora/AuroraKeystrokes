@@ -1,5 +1,5 @@
 /*
- * FabricKeystrokes
+ * AuroraKeystrokes
  * Copyright (C) 2019  LambdAurora
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,9 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.lambdaurora.keystrokes;
+package me.lambdaurora.keystrokes.gui;
 
-public interface KeyBindingAccessor
+import java.util.function.Consumer;
+
+/**
+ * Represents a checkbox widget.
+ */
+public class CheckboxWidget extends net.minecraft.client.gui.widget.CheckboxWidget
 {
-    int get_times_pressed();
+    private final Consumer<CheckboxWidget> on_press;
+
+    public CheckboxWidget(int x, int y, int width, int height, String message, boolean checked, Consumer<CheckboxWidget> on_press)
+    {
+        super(x, y, width, height, message, checked);
+        this.on_press = on_press;
+    }
+
+    @Override
+    public void onPress()
+    {
+        super.onPress();
+        this.on_press.accept(this);
+    }
 }

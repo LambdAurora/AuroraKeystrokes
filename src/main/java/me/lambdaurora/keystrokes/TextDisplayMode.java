@@ -1,5 +1,5 @@
 /*
- * FabricKeystrokes
+ * AuroraKeystrokes
  * Copyright (C) 2019  LambdAurora
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,6 +20,7 @@ package me.lambdaurora.keystrokes;
 
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.resource.language.I18n;
+import org.aperlambda.lambdacommon.utils.Nameable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -29,7 +30,7 @@ import java.util.function.Function;
 /**
  * Represents the display modes of the text inside the keystrokes boxes.
  */
-public enum TextDisplayMode
+public enum TextDisplayMode implements Nameable
 {
     ACTION_NAME(key_binding -> I18n.translate(key_binding.getId())),
     KEY_NAME(KeyBinding::getLocalizedName);
@@ -39,6 +40,29 @@ public enum TextDisplayMode
     TextDisplayMode(@NotNull Function<KeyBinding, String> name_mapper)
     {
         this.name_mapper = name_mapper;
+    }
+
+    /**
+     * Returns the next display mode available.
+     *
+     * @return The next available display mode.
+     */
+    public TextDisplayMode next()
+    {
+        TextDisplayMode[] v = values();
+        if (v.length == this.ordinal() + 1)
+            return v[0];
+        return v[this.ordinal() + 1];
+    }
+
+    /**
+     * Gets the translated name of this text display mode.
+     *
+     * @return The translated name of this text display mode.
+     */
+    public String get_translated_name()
+    {
+        return I18n.translate("keystrokes.text_display_mode." + this.get_name());
     }
 
     /**
@@ -60,6 +84,12 @@ public enum TextDisplayMode
      */
     public static Optional<TextDisplayMode> by_id(String id)
     {
-        return Arrays.stream(values()).filter(tdm -> tdm.name().equalsIgnoreCase(id)).findFirst();
+        return Arrays.stream(values()).filter(tdm -> tdm.get_name().equalsIgnoreCase(id)).findFirst();
+    }
+
+    @Override
+    public @NotNull String get_name()
+    {
+        return this.name().toLowerCase();
     }
 }

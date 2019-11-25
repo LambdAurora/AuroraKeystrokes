@@ -1,5 +1,5 @@
 /*
- * FabricKeystrokes
+ * AuroraKeystrokes
  * Copyright (C) 2019  LambdAurora
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,13 +18,11 @@
 
 package me.lambdaurora.keystrokes.gui;
 
-import me.lambdaurora.keystrokes.FabricKeystrokes;
+import me.lambdaurora.keystrokes.AuroraKeystrokes;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.options.KeyBinding;
 import org.jetbrains.annotations.NotNull;
-
-import java.awt.*;
 
 /**
  * Represents the keystrokes hud.
@@ -32,9 +30,9 @@ import java.awt.*;
 public class KeystrokesHud extends DrawableHelper
 {
     private final MinecraftClient  client;
-    private final FabricKeystrokes mod;
+    private final AuroraKeystrokes mod;
 
-    public KeystrokesHud(MinecraftClient client, FabricKeystrokes mod)
+    public KeystrokesHud(MinecraftClient client, AuroraKeystrokes mod)
     {
         this.client = client;
         this.mod = mod;
@@ -42,8 +40,6 @@ public class KeystrokesHud extends DrawableHelper
 
     public void render()
     {
-        int x = (int) (this.mod.config.get_x() / 100.0 * this.client.getWindow().getScaledWidth()),
-                y = (int) (this.mod.config.get_y() / 100.0 * this.client.getWindow().getScaledHeight());
         int padding = this.mod.config.get_padding();
         String cps_text = "CPS: " + this.mod.cps;
 
@@ -60,8 +56,14 @@ public class KeystrokesHud extends DrawableHelper
         int jump_sneak_width = sneak_width + padding + jump_width;
         if (!this.mod.config.show_movement_boxes())
             right_left_width = 0;
-        if (!this.mod.config.show_interaction_boxes())
+        if (!this.mod.config.show_attack_box() && !this.mod.config.show_use_box())
             mouse_width = 0;
+        else if (!this.mod.config.show_attack_box() || !this.mod.config.show_use_box()) {
+            if (this.mod.config.show_attack_box())
+                mouse_width = attack_width;
+            else
+                mouse_width = use_width;
+        }
         if (!this.mod.config.show_sneak_box() && !this.mod.config.show_jump_box())
             jump_sneak_width = 0;
         else if (!this.mod.config.show_sneak_box() || !this.mod.config.show_jump_box()) {
@@ -71,32 +73,38 @@ public class KeystrokesHud extends DrawableHelper
                 jump_sneak_width = jump_width;
         }
         int total_width = this.get_total_width(right_left_width, mouse_width, jump_sneak_width);
+        int total_height = this.get_total_height(box_height, padding);
+
+        int x = (int) (this.mod.config.get_x() / 100.0 * (this.client.window.getScaledWidth() - total_width)),
+                y = (int) (this.mod.config.get_y() / 100.0 * (this.client.window.getScaledHeight() - total_height));
+
         int box_width = this.get_box_width(this.client.options.keyForward);
 
-        int line = 0;
+        y -= (box_height + padding);
 
         // Movements keys.
         if (this.mod.config.show_movement_boxes()) {
-            this.render_key_box(x + (total_width / 2 - box_width / 2), y + (padding + box_height) * ++line, box_height, this.client.options.keyForward);
-            this.render_section(x, y + (padding + box_height) * ++line, padding, box_height, this.client.options.keyLeft, this.client.options.keyRight, total_width, left_width, right_width);
+            this.render_key_box(x + (total_width / 2 - box_width / 2), (y += (padding + box_height)), padding, box_height, this.client.options.keyForward);
+            this.render_section(x, (y += (padding + box_height)), padding, box_height, this.client.options.keyLeft, this.client.options.keyRight, total_width, left_width, right_width);
             box_width = this.get_box_width(this.client.options.keyBack);
-            this.render_key_box(x + (total_width / 2 - box_width / 2), y + (padding + box_height) * ++line, box_height, this.client.options.keyBack);
+            this.render_key_box(x + (total_width / 2 - box_width / 2), (y += (padding + box_height)), padding, box_height, this.client.options.keyBack);
         }
 
         // Interaction keys.
-        if (this.mod.config.show_interaction_boxes())
-            this.render_section(x, y + (padding + box_height) * ++line, padding, box_height, this.client.options.keyAttack, this.client.options.keyUse, total_width, attack_width, use_width);
+        if (this.mod.config.show_attack_box() && this.mod.config.show_use_box())
+            this.render_section(x, (y += (padding + box_height)), padding, box_height, this.client.options.keyAttack, this.client.options.keyUse, total_width, attack_width, use_width);
+        else if (this.mod.config.show_attack_box())
+            this.render_key_box(x + (total_width / 2 - attack_width / 2), (y += (padding + box_height)), padding, box_height, this.client.options.keyAttack);
+        else if (this.mod.config.show_use_box())
+            this.render_key_box(x + (total_width / 2 - use_width / 2), (y += (padding + box_height)), padding, box_height, this.client.options.keyUse);
 
         // More movements keys.
         if (this.mod.config.show_sneak_box() && this.mod.config.show_jump_box())
-            this.render_section(x, y + (padding + box_height) * ++line, padding, box_height, this.client.options.keySneak, this.client.options.keyJump, total_width, sneak_width, jump_width);
-        else if (this.mod.config.show_sneak_box()) {
-            box_width = this.get_box_width(this.client.options.keySneak);
-            this.render_key_box(x + (total_width / 2 - box_width / 2), y + (padding + box_height) * ++line, box_height, this.client.options.keySneak);
-        } else if (this.mod.config.show_jump_box()) {
-            box_width = this.get_box_width(this.client.options.keyJump);
-            this.render_key_box(x + (total_width / 2 - box_width / 2), y + (padding + box_height) * ++line, box_height, this.client.options.keyJump);
-        }
+            this.render_section(x, (y += (padding + box_height)), padding, box_height, this.client.options.keySneak, this.client.options.keyJump, total_width, sneak_width, jump_width);
+        else if (this.mod.config.show_sneak_box())
+            this.render_key_box(x + (total_width / 2 - sneak_width / 2), (y += (padding + box_height)), padding, box_height, this.client.options.keySneak);
+        else if (this.mod.config.show_jump_box())
+            this.render_key_box(x + (total_width / 2 - jump_width / 2), (y += (padding + box_height)), padding, box_height, this.client.options.keyJump);
 
         // CPS counter.
         if (this.mod.config.show_cps()) {
@@ -104,13 +112,27 @@ public class KeystrokesHud extends DrawableHelper
             int cps_x, cps_y;
             if (this.mod.config.attached_cps()) {
                 cps_x = x + (total_width / 2 - box_width / 2);
-                cps_y = y + (padding + box_height) * ++line;
+                cps_y = y + (padding + box_height);
             } else {
-                cps_x = this.client.getWindow().getScaledWidth() - padding - box_width;
-                cps_y = this.client.getWindow().getScaledHeight() - padding - box_height;
+                cps_x = this.client.window.getScaledWidth() - padding - box_width;
+                cps_y = this.client.window.getScaledHeight() - padding - box_height;
             }
-            this.render_text_box(cps_x, cps_y, box_height, cps_text, this.mod.config.get_color_pressed(), this.mod.config.get_background_normal());
+            AuroraKeystrokes.render_text_box(this, this.client.textRenderer, cps_x, cps_y, padding, box_height, cps_text, this.mod.config.get_color_pressed(), this.mod.config.get_background_normal());
         }
+    }
+
+    public int get_total_height(int box_height, int padding)
+    {
+        int i = 0;
+        if (this.mod.config.show_movement_boxes())
+            i += (box_height + padding) * 3;
+        if (this.mod.config.show_attack_box() || this.mod.config.show_use_box())
+            i += box_height + padding;
+        if (this.mod.config.show_sneak_box() || this.mod.config.show_jump_box())
+            i += box_height + padding;
+        if (this.mod.config.show_cps() && this.mod.config.attached_cps())
+            i += box_height + padding;
+        return i - padding;
     }
 
     public int get_total_width(int right_left_width, int mouse_width, int jump_sneak_width)
@@ -131,30 +153,20 @@ public class KeystrokesHud extends DrawableHelper
     public void render_section(int x, int y, int padding, int box_height, @NotNull KeyBinding left, @NotNull KeyBinding right, int total_width, int left_width, int right_width)
     {
         if (total_width == left_width + padding + right_width) {
-            left_width = this.render_key_box(x, y, box_height, left);
-            this.render_key_box(x + left_width + padding, y, box_height, right);
+            left_width = this.render_key_box(x, y, padding, box_height, left);
+            this.render_key_box(x + left_width + padding, y, padding, box_height, right);
         } else {
             int max_width = (total_width - padding) / 2;
-            this.render_key_box(x + (max_width / 2 - left_width / 2), y, box_height, left);
-            this.render_key_box(x + padding + max_width + (max_width / 2 - right_width / 2), y, box_height, right);
+            this.render_key_box(x + (max_width / 2 - left_width / 2), y, padding, box_height, left);
+            this.render_key_box(x + padding + max_width + (max_width / 2 - right_width / 2), y, padding, box_height, right);
         }
     }
 
-    public int render_key_box(int x, int y, int box_height, @NotNull KeyBinding key_binding)
+    public int render_key_box(int x, int y, int padding, int box_height, @NotNull KeyBinding key_binding)
     {
         if (key_binding.isPressed())
-            return render_text_box(x, y, box_height, this.mod.config.get_text_display_mode().get_text(key_binding), this.mod.config.get_color_pressed(), this.mod.config.get_background_pressed());
+            return AuroraKeystrokes.render_text_box(this, this.client.textRenderer, x, y, padding, box_height, this.mod.config.get_text_display_mode().get_text(key_binding), this.mod.config.get_color_pressed(), this.mod.config.get_background_pressed());
         else
-            return render_text_box(x, y, box_height, this.mod.config.get_text_display_mode().get_text(key_binding), this.mod.config.get_color_normal(), this.mod.config.get_background_normal());
-    }
-
-    public int render_text_box(int x, int y, int box_height, @NotNull String text, @NotNull Color foreground, @NotNull Color background)
-    {
-        int padding = this.mod.config.get_padding();
-        int text_length = this.client.textRenderer.getStringWidth(text);
-        int box_width = padding * 2 + text_length;
-        fill(x, y, x + box_width, y + box_height, background.getRGB());
-        this.drawString(this.client.textRenderer, text, x + padding, y + padding + 1, foreground.getRGB());
-        return box_width;
+            return AuroraKeystrokes.render_text_box(this, this.client.textRenderer, x, y, padding, box_height, this.mod.config.get_text_display_mode().get_text(key_binding), this.mod.config.get_color_normal(), this.mod.config.get_background_normal());
     }
 }

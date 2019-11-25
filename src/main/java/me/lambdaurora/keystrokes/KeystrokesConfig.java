@@ -1,5 +1,5 @@
 /*
- * FabricKeystrokes
+ * AuroraKeystrokes
  * Copyright (C) 2019  LambdAurora
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,13 +23,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
+/**
+ * Represents the AuroraKeytrokes configuration.
+ */
 public class KeystrokesConfig
 {
     private final FileConfig       config            = FileConfig.builder("config/keystrokes.toml").concurrent().defaultResource("/config.toml").build();
-    private final FabricKeystrokes mod;
+    private final AuroraKeystrokes mod;
     private       TextDisplayMode  text_display_mode = TextDisplayMode.ACTION_NAME;
 
-    public KeystrokesConfig(@NotNull FabricKeystrokes mod)
+    public KeystrokesConfig(@NotNull AuroraKeystrokes mod)
     {
         this.mod = mod;
     }
@@ -83,14 +86,39 @@ public class KeystrokesConfig
         return this.config.getOrElse("hud.padding", 4);
     }
 
+    public void set_padding(int padding)
+    {
+        this.config.set("hud.padding", padding);
+    }
+
     public boolean show_movement_boxes()
     {
         return this.config.getOrElse("hud.show_movement_boxes", true);
     }
 
-    public boolean show_interaction_boxes()
+    public void set_movement_boxes(boolean show)
     {
-        return this.config.getOrElse("hud.show_interaction_boxes", true);
+        this.config.set("hud.show_movement_boxes", show);
+    }
+
+    public boolean show_attack_box()
+    {
+        return this.config.getOrElse("hud.show_attack_box", true);
+    }
+
+    public void set_attack_box(boolean show)
+    {
+        this.config.set("hud.show_attack_box", show);
+    }
+
+    public boolean show_use_box()
+    {
+        return this.config.getOrElse("hud.show_use_box", true);
+    }
+
+    public void set_use_box(boolean show)
+    {
+        this.config.set("hud.show_use_box", show);
     }
 
     public boolean show_sneak_box()
@@ -98,9 +126,19 @@ public class KeystrokesConfig
         return this.config.getOrElse("hud.show_sneak_box", true);
     }
 
+    public void set_sneak_box(boolean show)
+    {
+        this.config.set("hud.show_sneak_box", show);
+    }
+
     public boolean show_jump_box()
     {
         return this.config.getOrElse("hud.show_jump_box", true);
+    }
+
+    public void set_jump_box(boolean show)
+    {
+        this.config.set("hud.show_jump_box", show);
     }
 
     public TextDisplayMode get_text_display_mode()
@@ -108,9 +146,22 @@ public class KeystrokesConfig
         return this.text_display_mode;
     }
 
+    public void set_text_display_mode(TextDisplayMode text_display_mode)
+    {
+        if (text_display_mode != this.text_display_mode) {
+            this.text_display_mode = text_display_mode;
+            this.config.set("hud.text_display_mode", text_display_mode.name().toLowerCase());
+        }
+    }
+
     public boolean show_cps()
     {
         return this.config.getOrElse("cps.show", true);
+    }
+
+    public void set_show_cps(boolean show)
+    {
+        this.config.set("cps.show", show);
     }
 
     public boolean attached_cps()
@@ -118,23 +169,56 @@ public class KeystrokesConfig
         return this.config.getOrElse("cps.attached", true);
     }
 
+    public void set_attached_cps(boolean attached)
+    {
+        this.config.set("cps.attached", attached);
+    }
+
+    private String hex(int i)
+    {
+        String res = Integer.toHexString(i);
+        if (res.length() == 1)
+            return "0" + res;
+        return res;
+    }
+
     public Color get_color_normal()
     {
-        return FabricKeystrokes.parse_color(this.config.getOrElse("colors.normal", "#FFFFFFFF"));
+        return AuroraKeystrokes.parse_color(this.config.getOrElse("colors.normal", "#FFFFFFFF"));
+    }
+
+    public void set_color_normal(@NotNull Color color)
+    {
+        this.config.set("colors.normal", "#" + hex(color.getRed()) + hex(color.getGreen()) + hex(color.getBlue()) + hex(color.getAlpha()));
     }
 
     public Color get_color_pressed()
     {
-        return FabricKeystrokes.parse_color(this.config.getOrElse("colors.pressed", "#FFA000FF"));
+        return AuroraKeystrokes.parse_color(this.config.getOrElse("colors.pressed", "#FFA000FF"));
+    }
+
+    public void set_color_pressed(@NotNull Color color)
+    {
+        this.config.set("colors.pressed", "#" + hex(color.getRed()) + hex(color.getGreen()) + hex(color.getBlue()) + hex(color.getAlpha()));
     }
 
     public Color get_background_normal()
     {
-        return FabricKeystrokes.parse_color(this.config.getOrElse("colors.background_normal", "#000000AA"));
+        return AuroraKeystrokes.parse_color(this.config.getOrElse("colors.background_normal", "#000000AA"));
+    }
+
+    public void set_background_normal(@NotNull Color color)
+    {
+        this.config.set("colors.background_normal", "#" + hex(color.getRed()) + hex(color.getGreen()) + hex(color.getBlue()) + hex(color.getAlpha()));
     }
 
     public Color get_background_pressed()
     {
-        return FabricKeystrokes.parse_color(this.config.getOrElse("colors.background_pressed", "#FFFFFFAA"));
+        return AuroraKeystrokes.parse_color(this.config.getOrElse("colors.background_pressed", "#FFFFFFAA"));
+    }
+
+    public void set_background_pressed(@NotNull Color color)
+    {
+        this.config.set("colors.background_pressed", "#" + hex(color.getRed()) + hex(color.getGreen()) + hex(color.getBlue()) + hex(color.getAlpha()));
     }
 }

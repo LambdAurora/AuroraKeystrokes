@@ -1,5 +1,5 @@
 /*
- * FabricKeystrokes
+ * AuroraKeystrokes
  * Copyright (C) 2019  LambdAurora
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,10 +21,9 @@ package me.lambdaurora.keystrokes.command;
 import com.mojang.brigadier.CommandDispatcher;
 import io.github.cottonmc.clientcommands.ClientCommandPlugin;
 import io.github.cottonmc.clientcommands.CottonClientCommandSource;
-import me.lambdaurora.keystrokes.FabricKeystrokes;
+import me.lambdaurora.keystrokes.AuroraKeystrokes;
 import me.lambdaurora.keystrokes.gui.KeystrokesConfigScreen;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import org.aperlambda.lambdacommon.utils.LambdaUtils;
@@ -33,6 +32,9 @@ import java.util.Timer;
 
 import static io.github.cottonmc.clientcommands.ArgumentBuilders.literal;
 
+/**
+ * Represents the client command of AuroraKeystrokes.
+ */
 public class KeystrokesCommand implements ClientCommandPlugin
 {
     @Override
@@ -41,20 +43,19 @@ public class KeystrokesCommand implements ClientCommandPlugin
         dispatcher.register(literal("keystrokes")
                 .then(literal("reload")
                         .executes(ctx -> {
-                            FabricKeystrokes.get().config.load();
+                            AuroraKeystrokes.get().config.load();
                             ctx.getSource().sendFeedback(new TranslatableText("keystrokes.reloaded").formatted(Formatting.GREEN));
                             return 1;
                         }))
                 .then(literal("save")
                         .executes(ctx -> {
-                            FabricKeystrokes.get().config.save();
+                            AuroraKeystrokes.get().config.save();
                             ctx.getSource().sendFeedback(new TranslatableText("keystrokes.saved").formatted(Formatting.GREEN));
                             return 1;
                         }))
                 .executes(ctx -> {
-                    System.out.println("Test");
                     new Timer().schedule(LambdaUtils.new_timer_task_from_lambda(() ->
-                            MinecraftClient.getInstance().openScreen(new KeystrokesConfigScreen(FabricKeystrokes.get()))), 10);
+                            MinecraftClient.getInstance().openScreen(new KeystrokesConfigScreen(AuroraKeystrokes.get()))), 2);
                     return 1;
                 }));
     }

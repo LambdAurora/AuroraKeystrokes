@@ -1,5 +1,5 @@
 /*
- * FabricKeystrokes
+ * AuroraKeystrokes
  * Copyright (C) 2019  LambdAurora
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@
 
 package me.lambdaurora.keystrokes.mixin;
 
-import me.lambdaurora.keystrokes.FabricKeystrokes;
+import me.lambdaurora.keystrokes.AuroraKeystrokes;
 import me.lambdaurora.keystrokes.gui.KeystrokesHud;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.InGameHud;
@@ -30,15 +30,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(InGameHud.class)
 public class InGameHudMixin
 {
-    private FabricKeystrokes fabric_keystrokes;
+    private AuroraKeystrokes fabric_keystrokes;
     private KeystrokesHud    keystrokes_hud;
 
     @Inject(method = "<init>", at = @At("RETURN"))
     public void on_new(MinecraftClient client, CallbackInfo ci)
     {
-        this.fabric_keystrokes = FabricKeystrokes.get();
+        this.fabric_keystrokes = AuroraKeystrokes.get();
         this.fabric_keystrokes.log("Adding the keystokes hud...");
-        // CPS counters.
+        // Keystrokes hud.
         this.keystrokes_hud = new KeystrokesHud(client, this.fabric_keystrokes);
     }
 

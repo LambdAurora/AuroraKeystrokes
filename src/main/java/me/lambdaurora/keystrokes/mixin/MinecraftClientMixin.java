@@ -1,5 +1,5 @@
 /*
- * FabricKeystrokes
+ * AuroraKeystrokes
  * Copyright (C) 2019  LambdAurora
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,19 +18,22 @@
 
 package me.lambdaurora.keystrokes.mixin;
 
-import me.lambdaurora.keystrokes.KeyBindingAccessor;
-import net.minecraft.client.options.KeyBinding;
+import me.lambdaurora.keystrokes.AuroraKeystrokes;
+import net.minecraft.client.MinecraftClient;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(KeyBinding.class)
-public class KeyBindingMixin implements KeyBindingAccessor
+/**
+ * Injects the CPS counter.
+ */
+@Mixin(MinecraftClient.class)
+public class MinecraftClientMixin
 {
-    @Shadow private int timesPressed;
-
-    @Override
-    public int get_times_pressed()
+    @Inject(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;doAttack()V"))
+    private void on_attack(CallbackInfo ci)
     {
-        return this.timesPressed;
+        AuroraKeystrokes.get().cps++;
     }
 }
