@@ -1,7 +1,7 @@
 #
 # LambdAurora's ignore file
 #
-# v0.10
+# v0.11
 
 # JetBrains
 .idea/
@@ -41,6 +41,8 @@ node_modules/
 logs/
 
 # Languages
+## Java
+classes/
 ## Python
 __pycache__/
 ## Rust
