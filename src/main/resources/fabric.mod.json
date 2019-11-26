@@ -1,15 +1,16 @@
 {
   "schemaVersion": 1,
   "id": "aurora_keystrokes",
-  "version": "${version}",
   "name": "AuroraKeystrokes",
+  "version": "${version}",
   "description": "Displays the movement keys and mouse clicks on screen.",
   "authors": [
     "LambdAurora"
   ],
   "contact": {
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/aurorakeystrokes",
-    "sources": "https://github.com/LambdAurora/AuroraKeystrokes.git"
+    "sources": "https://github.com/LambdAurora/AuroraKeystrokes.git",
+    "issues": "https://github.com/LambdAurora/AuroraKeystrokes/issues"
   },
   "license": "GPLv3",
   "icon": "assets/aurora_keystrokes/icon.png",
@@ -33,5 +34,8 @@
   },
   "suggests": {
     "flamingo": "*"
+  },
+  "custom": {
+    "modmenu:clientsideOnly": true
   }
 }
