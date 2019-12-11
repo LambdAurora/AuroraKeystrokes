@@ -75,8 +75,8 @@ public class KeystrokesHud extends DrawableHelper
         int total_width = this.get_total_width(right_left_width, mouse_width, jump_sneak_width);
         int total_height = this.get_total_height(box_height, padding);
 
-        int x = (int) (this.mod.config.get_x() / 100.0 * (this.client.window.getScaledWidth() - total_width)),
-                y = (int) (this.mod.config.get_y() / 100.0 * (this.client.window.getScaledHeight() - total_height));
+        int x = (int) (this.mod.config.get_x() / 100.0 * (this.client.getWindow().getScaledWidth() - total_width)),
+                y = (int) (this.mod.config.get_y() / 100.0 * (this.client.getWindow().getScaledHeight() - total_height));
 
         int box_width = this.get_box_width(this.client.options.keyForward);
 
@@ -114,8 +114,8 @@ public class KeystrokesHud extends DrawableHelper
                 cps_x = x + (total_width / 2 - box_width / 2);
                 cps_y = y + (padding + box_height);
             } else {
-                cps_x = this.client.window.getScaledWidth() - padding - box_width;
-                cps_y = this.client.window.getScaledHeight() - padding - box_height;
+                cps_x = this.client.getWindow().getScaledWidth() - padding - box_width;
+                cps_y = this.client.getWindow().getScaledHeight() - padding - box_height;
             }
             AuroraKeystrokes.render_text_box(this, this.client.textRenderer, cps_x, cps_y, padding, box_height, cps_text, this.mod.config.get_color_pressed(), this.mod.config.get_background_normal());
         }
