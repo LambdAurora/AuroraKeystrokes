@@ -17,6 +17,7 @@ repositories {
 	mavenLocal()
     mavenCentral()
 	maven { url = 'https://aperlambda.github.io/maven' }
+	maven { url = "https://jitpack.io" }
 	maven {
 		name = 'CottonMC'
 		url = 'http://server.bbkr.space:8081/artifactory/libs-snapshot'
@@ -33,12 +34,15 @@ dependencies {
 	modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	modCompile "io.github.cottonmc:cotton-client-commands:0.4.2+1.14.3-SNAPSHOT"
 
+	modCompile "com.github.lambdaurora:spruceui:${project.spruceui_version}"
+	include "com.github.lambdaurora:spruceui:${project.spruceui_version}"
+
 	implementation "org.jetbrains:annotations:17.0.0"
-	implementation "org.aperlambda:lambdajcommon:1.7.2"
+	implementation "org.aperlambda:lambdajcommon:1.8.0"
 	implementation "com.electronwill.night-config:core:3.5.3"
 	implementation "com.electronwill.night-config:toml:3.5.3"
 	include "org.jetbrains:annotations:17.0.0"
-	include "org.aperlambda:lambdajcommon:1.7.2"
+	include "org.aperlambda:lambdajcommon:1.8.0"
 	include "com.electronwill.night-config:core:3.5.3"
 	include "com.electronwill.night-config:toml:3.5.3"
 

@@ -31,45 +31,45 @@ public enum ColorConfigPanel implements Nameable
 {
     NORMAL(),
     PRESSED() {
-        public Color get_color(@NotNull KeystrokesConfig config)
+        public Color getColor(@NotNull KeystrokesConfig config)
         {
-            return config.get_color_pressed();
+            return config.getColorPressed();
         }
 
-        public void set_color(@NotNull KeystrokesConfig config, @NotNull Color color)
+        public void setColor(@NotNull KeystrokesConfig config, @NotNull Color color)
         {
-            config.set_color_pressed(color);
+            config.setColorPressed(color);
         }
 
-        public Color get_background_color(@NotNull KeystrokesConfig config)
+        public Color getBackgroundColor(@NotNull KeystrokesConfig config)
         {
-            return config.get_background_pressed();
+            return config.getBackgroundPressed();
         }
 
-        public void set_background_color(@NotNull KeystrokesConfig config, @NotNull Color color)
+        public void setBackgroundColor(@NotNull KeystrokesConfig config, @NotNull Color color)
         {
-            config.set_background_pressed(color);
+            config.setBackgroundPressed(color);
         }
     };
 
-    public Color get_color(@NotNull KeystrokesConfig config)
+    public Color getColor(@NotNull KeystrokesConfig config)
     {
-        return config.get_color_normal();
+        return config.getColorNormal();
     }
 
-    public void set_color(@NotNull KeystrokesConfig config, @NotNull Color color)
+    public void setColor(@NotNull KeystrokesConfig config, @NotNull Color color)
     {
-        config.set_color_normal(color);
+        config.setColorNormal(color);
     }
 
-    public Color get_background_color(@NotNull KeystrokesConfig config)
+    public Color getBackgroundColor(@NotNull KeystrokesConfig config)
     {
-        return config.get_background_normal();
+        return config.getBackgroundNormal();
     }
 
-    public void set_background_color(@NotNull KeystrokesConfig config, @NotNull Color color)
+    public void setBackgroundColor(@NotNull KeystrokesConfig config, @NotNull Color color)
     {
-        config.set_background_normal(color);
+        config.setBackgroundNormal(color);
     }
 
     /**
@@ -90,13 +90,13 @@ public enum ColorConfigPanel implements Nameable
      *
      * @return The translated name of this color config panel.
      */
-    public String get_translated_name()
+    public String getTranslatedName()
     {
-        return I18n.translate("keystrokes.color_config_panel." + this.get_name());
+        return I18n.translate("keystrokes.color_config_panel." + this.getName());
     }
 
     @Override
-    public @NotNull String get_name()
+    public @NotNull String getName()
     {
         return this.name().toLowerCase();
     }

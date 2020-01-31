@@ -32,7 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MinecraftClientMixin
 {
     @Inject(method = "handleInputEvents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;doAttack()V"))
-    private void on_attack(CallbackInfo ci)
+    private void aurorakeystrokes_onAttack(CallbackInfo ci)
     {
         AuroraKeystrokes.get().cps++;
     }

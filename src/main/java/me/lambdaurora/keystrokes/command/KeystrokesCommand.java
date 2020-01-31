@@ -54,7 +54,7 @@ public class KeystrokesCommand implements ClientCommandPlugin
                             return 1;
                         }))
                 .executes(ctx -> {
-                    new Timer().schedule(LambdaUtils.new_timer_task_from_lambda(() ->
+                    new Timer().schedule(LambdaUtils.newTimerTaskFromLambda(() ->
                             MinecraftClient.getInstance().openScreen(new KeystrokesConfigScreen(AuroraKeystrokes.get()))), 2);
                     return 1;
                 }));

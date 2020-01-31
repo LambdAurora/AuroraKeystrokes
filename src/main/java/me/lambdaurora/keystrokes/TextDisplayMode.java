@@ -32,14 +32,14 @@ import java.util.function.Function;
  */
 public enum TextDisplayMode implements Nameable
 {
-    ACTION_NAME(key_binding -> I18n.translate(key_binding.getId())),
+    ACTION_NAME(keyBinding -> I18n.translate(keyBinding.getId())),
     KEY_NAME(KeyBinding::getLocalizedName);
 
-    private final Function<KeyBinding, String> name_mapper;
+    private final Function<KeyBinding, String> nameMapper;
 
-    TextDisplayMode(@NotNull Function<KeyBinding, String> name_mapper)
+    TextDisplayMode(@NotNull Function<KeyBinding, String> nameMapper)
     {
-        this.name_mapper = name_mapper;
+        this.nameMapper = nameMapper;
     }
 
     /**
@@ -60,20 +60,20 @@ public enum TextDisplayMode implements Nameable
      *
      * @return The translated name of this text display mode.
      */
-    public String get_translated_name()
+    public String getTranslatedName()
     {
-        return I18n.translate("keystrokes.text_display_mode." + this.get_name());
+        return I18n.translate("keystrokes.text_display_mode." + this.getName());
     }
 
     /**
      * Gets the text from the specified key binding.
      *
-     * @param key_binding The specified key binding.
+     * @param keyBinding The specified key binding.
      * @return The text describing the key binding.
      */
-    public String get_text(KeyBinding key_binding)
+    public String getText(KeyBinding keyBinding)
     {
-        return this.name_mapper.apply(key_binding);
+        return this.nameMapper.apply(keyBinding);
     }
 
     /**
@@ -82,13 +82,13 @@ public enum TextDisplayMode implements Nameable
      * @param id The string identifier.
      * @return The optional text display mode.
      */
-    public static Optional<TextDisplayMode> by_id(String id)
+    public static Optional<TextDisplayMode> byId(String id)
     {
-        return Arrays.stream(values()).filter(tdm -> tdm.get_name().equalsIgnoreCase(id)).findFirst();
+        return Arrays.stream(values()).filter(tdm -> tdm.getName().equalsIgnoreCase(id)).findFirst();
     }
 
     @Override
-    public @NotNull String get_name()
+    public @NotNull String getName()
     {
         return this.name().toLowerCase();
     }

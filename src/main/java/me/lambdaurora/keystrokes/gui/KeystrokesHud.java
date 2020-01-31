@@ -19,154 +19,163 @@
 package me.lambdaurora.keystrokes.gui;
 
 import me.lambdaurora.keystrokes.AuroraKeystrokes;
+import me.lambdaurora.spruceui.hud.Hud;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.options.KeyBinding;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents the keystrokes hud.
  */
-public class KeystrokesHud extends DrawableHelper
+public class KeystrokesHud extends Hud
 {
-    private final MinecraftClient  client;
     private final AuroraKeystrokes mod;
+    private       MinecraftClient  client;
 
-    public KeystrokesHud(MinecraftClient client, AuroraKeystrokes mod)
+    public KeystrokesHud(AuroraKeystrokes mod)
     {
-        this.client = client;
+        super(new Identifier(AuroraKeystrokes.NAMESPACE, "hud/keystrokes"));
         this.mod = mod;
     }
 
-    public void render()
+    @Override
+    public void init(@NotNull MinecraftClient client, int screenWidth, int screenHeight)
     {
-        int padding = this.mod.config.get_padding();
-        String cps_text = "CPS: " + this.mod.cps;
+        super.init(client, screenWidth, screenHeight);
+        this.client = client;
+    }
+
+    @Override
+    public void render(float tickDelta)
+    {
+        int padding = this.mod.config.getPadding();
+        String cpsText = "CPS: " + this.mod.cps;
 
         // Sizes.
-        int box_height = this.client.textRenderer.fontHeight + padding * 2;
-        int left_width = this.get_box_width(this.client.options.keyLeft);
-        int right_width = this.get_box_width(this.client.options.keyRight);
-        int attack_width = this.get_box_width(this.client.options.keyAttack);
-        int use_width = this.get_box_width(this.client.options.keyUse);
-        int sneak_width = this.get_box_width(this.client.options.keySneak);
-        int jump_width = this.get_box_width(this.client.options.keyJump);
-        int right_left_width = left_width + padding + right_width;
-        int mouse_width = attack_width + padding + use_width;
-        int jump_sneak_width = sneak_width + padding + jump_width;
-        if (!this.mod.config.show_movement_boxes())
-            right_left_width = 0;
-        if (!this.mod.config.show_attack_box() && !this.mod.config.show_use_box())
-            mouse_width = 0;
-        else if (!this.mod.config.show_attack_box() || !this.mod.config.show_use_box()) {
-            if (this.mod.config.show_attack_box())
-                mouse_width = attack_width;
+        int boxHeight = this.client.textRenderer.fontHeight + padding * 2;
+        int leftWidth = this.getBoxWidth(this.client.options.keyLeft);
+        int rightWidth = this.getBoxWidth(this.client.options.keyRight);
+        int attackWidth = this.getBoxWidth(this.client.options.keyAttack);
+        int useWidth = this.getBoxWidth(this.client.options.keyUse);
+        int sneakWidth = this.getBoxWidth(this.client.options.keySneak);
+        int jumpWidth = this.getBoxWidth(this.client.options.keyJump);
+        int rightLeftWidth = leftWidth + padding + rightWidth;
+        int mouseWidth = attackWidth + padding + useWidth;
+        int jumpSneakWidth = sneakWidth + padding + jumpWidth;
+        if (!this.mod.config.showMovementBoxes())
+            rightLeftWidth = 0;
+        if (!this.mod.config.showAttackBox() && !this.mod.config.showUseBox())
+            mouseWidth = 0;
+        else if (!this.mod.config.showAttackBox() || !this.mod.config.showUseBox()) {
+            if (this.mod.config.showAttackBox())
+                mouseWidth = attackWidth;
             else
-                mouse_width = use_width;
+                mouseWidth = useWidth;
         }
-        if (!this.mod.config.show_sneak_box() && !this.mod.config.show_jump_box())
-            jump_sneak_width = 0;
-        else if (!this.mod.config.show_sneak_box() || !this.mod.config.show_jump_box()) {
-            if (this.mod.config.show_sneak_box())
-                jump_sneak_width = sneak_width;
+        if (!this.mod.config.showSneakBox() && !this.mod.config.showJumpBox())
+            jumpSneakWidth = 0;
+        else if (!this.mod.config.showSneakBox() || !this.mod.config.showJumpBox()) {
+            if (this.mod.config.showSneakBox())
+                jumpSneakWidth = sneakWidth;
             else
-                jump_sneak_width = jump_width;
+                jumpSneakWidth = jumpWidth;
         }
-        int total_width = this.get_total_width(right_left_width, mouse_width, jump_sneak_width);
-        int total_height = this.get_total_height(box_height, padding);
+        int totalWidth = this.getTotalWidth(rightLeftWidth, mouseWidth, jumpSneakWidth);
+        int totalHeight = this.getTotalHeight(boxHeight, padding);
 
-        int x = (int) (this.mod.config.get_x() / 100.0 * (this.client.getWindow().getScaledWidth() - total_width)),
-                y = (int) (this.mod.config.get_y() / 100.0 * (this.client.getWindow().getScaledHeight() - total_height));
+        int x = (int) (this.mod.config.getX() / 100.0 * (this.client.getWindow().getScaledWidth() - totalWidth)),
+                y = (int) (this.mod.config.getY() / 100.0 * (this.client.getWindow().getScaledHeight() - totalHeight));
 
-        int box_width = this.get_box_width(this.client.options.keyForward);
+        int boxWidth = this.getBoxWidth(this.client.options.keyForward);
 
-        y -= (box_height + padding);
+        y -= (boxHeight + padding);
 
         // Movements keys.
-        if (this.mod.config.show_movement_boxes()) {
-            this.render_key_box(x + (total_width / 2 - box_width / 2), (y += (padding + box_height)), padding, box_height, this.client.options.keyForward);
-            this.render_section(x, (y += (padding + box_height)), padding, box_height, this.client.options.keyLeft, this.client.options.keyRight, total_width, left_width, right_width);
-            box_width = this.get_box_width(this.client.options.keyBack);
-            this.render_key_box(x + (total_width / 2 - box_width / 2), (y += (padding + box_height)), padding, box_height, this.client.options.keyBack);
+        if (this.mod.config.showMovementBoxes()) {
+            this.renderKeyBox(x + (totalWidth / 2 - boxWidth / 2), (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyForward);
+            this.renderSection(x, (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyLeft, this.client.options.keyRight, totalWidth, leftWidth, rightWidth);
+            boxWidth = this.getBoxWidth(this.client.options.keyBack);
+            this.renderKeyBox(x + (totalWidth / 2 - boxWidth / 2), (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyBack);
         }
 
         // Interaction keys.
-        if (this.mod.config.show_attack_box() && this.mod.config.show_use_box())
-            this.render_section(x, (y += (padding + box_height)), padding, box_height, this.client.options.keyAttack, this.client.options.keyUse, total_width, attack_width, use_width);
-        else if (this.mod.config.show_attack_box())
-            this.render_key_box(x + (total_width / 2 - attack_width / 2), (y += (padding + box_height)), padding, box_height, this.client.options.keyAttack);
-        else if (this.mod.config.show_use_box())
-            this.render_key_box(x + (total_width / 2 - use_width / 2), (y += (padding + box_height)), padding, box_height, this.client.options.keyUse);
+        if (this.mod.config.showAttackBox() && this.mod.config.showUseBox())
+            this.renderSection(x, (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyAttack, this.client.options.keyUse, totalWidth, attackWidth, useWidth);
+        else if (this.mod.config.showAttackBox())
+            this.renderKeyBox(x + (totalWidth / 2 - attackWidth / 2), (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyAttack);
+        else if (this.mod.config.showUseBox())
+            this.renderKeyBox(x + (totalWidth / 2 - useWidth / 2), (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyUse);
 
         // More movements keys.
-        if (this.mod.config.show_sneak_box() && this.mod.config.show_jump_box())
-            this.render_section(x, (y += (padding + box_height)), padding, box_height, this.client.options.keySneak, this.client.options.keyJump, total_width, sneak_width, jump_width);
-        else if (this.mod.config.show_sneak_box())
-            this.render_key_box(x + (total_width / 2 - sneak_width / 2), (y += (padding + box_height)), padding, box_height, this.client.options.keySneak);
-        else if (this.mod.config.show_jump_box())
-            this.render_key_box(x + (total_width / 2 - jump_width / 2), (y += (padding + box_height)), padding, box_height, this.client.options.keyJump);
+        if (this.mod.config.showSneakBox() && this.mod.config.showJumpBox())
+            this.renderSection(x, (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keySneak, this.client.options.keyJump, totalWidth, sneakWidth, jumpWidth);
+        else if (this.mod.config.showSneakBox())
+            this.renderKeyBox(x + (totalWidth / 2 - sneakWidth / 2), (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keySneak);
+        else if (this.mod.config.showJumpBox())
+            this.renderKeyBox(x + (totalWidth / 2 - jumpWidth / 2), (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyJump);
 
         // CPS counter.
-        if (this.mod.config.show_cps()) {
-            box_width = this.get_box_width(cps_text);
-            int cps_x, cps_y;
-            if (this.mod.config.attached_cps()) {
-                cps_x = x + (total_width / 2 - box_width / 2);
-                cps_y = y + (padding + box_height);
+        if (this.mod.config.showCps()) {
+            boxWidth = this.getBoxWidth(cpsText);
+            int cpsX, cpsY;
+            if (this.mod.config.attachedCps()) {
+                cpsX = x + (totalWidth / 2 - boxWidth / 2);
+                cpsY = y + (padding + boxHeight);
             } else {
-                cps_x = this.client.getWindow().getScaledWidth() - padding - box_width;
-                cps_y = this.client.getWindow().getScaledHeight() - padding - box_height;
+                cpsX = this.client.getWindow().getScaledWidth() - padding - boxWidth;
+                cpsY = this.client.getWindow().getScaledHeight() - padding - boxHeight;
             }
-            AuroraKeystrokes.render_text_box(this, this.client.textRenderer, cps_x, cps_y, padding, box_height, cps_text, this.mod.config.get_color_pressed(), this.mod.config.get_background_normal());
+            AuroraKeystrokes.renderTextBox(this, this.client.textRenderer, cpsX, cpsY, padding, boxHeight, cpsText, this.mod.config.getColorPressed(), this.mod.config.getBackgroundNormal());
         }
     }
 
-    public int get_total_height(int box_height, int padding)
+    public int getTotalHeight(int boxHeight, int padding)
     {
         int i = 0;
-        if (this.mod.config.show_movement_boxes())
-            i += (box_height + padding) * 3;
-        if (this.mod.config.show_attack_box() || this.mod.config.show_use_box())
-            i += box_height + padding;
-        if (this.mod.config.show_sneak_box() || this.mod.config.show_jump_box())
-            i += box_height + padding;
-        if (this.mod.config.show_cps() && this.mod.config.attached_cps())
-            i += box_height + padding;
+        if (this.mod.config.showMovementBoxes())
+            i += (boxHeight + padding) * 3;
+        if (this.mod.config.showAttackBox() || this.mod.config.showUseBox())
+            i += boxHeight + padding;
+        if (this.mod.config.showSneakBox() || this.mod.config.showJumpBox())
+            i += boxHeight + padding;
+        if (this.mod.config.showCps() && this.mod.config.attachedCps())
+            i += boxHeight + padding;
         return i - padding;
     }
 
-    public int get_total_width(int right_left_width, int mouse_width, int jump_sneak_width)
+    public int getTotalWidth(int rightLeftWidth, int mouseWidth, int jumpSneakWidth)
     {
-        return Math.max(right_left_width, Math.max(mouse_width, jump_sneak_width));
+        return Math.max(rightLeftWidth, Math.max(mouseWidth, jumpSneakWidth));
     }
 
-    public int get_box_width(@NotNull KeyBinding key_binding)
+    public int getBoxWidth(@NotNull KeyBinding keyBinding)
     {
-        return this.get_box_width(this.mod.config.get_text_display_mode().get_text(key_binding));
+        return this.getBoxWidth(this.mod.config.getTextDisplayMode().getText(keyBinding));
     }
 
-    public int get_box_width(@NotNull String text)
+    public int getBoxWidth(@NotNull String text)
     {
-        return this.client.textRenderer.getStringWidth(text) + this.mod.config.get_padding() * 2;
+        return this.client.textRenderer.getStringWidth(text) + this.mod.config.getPadding() * 2;
     }
 
-    public void render_section(int x, int y, int padding, int box_height, @NotNull KeyBinding left, @NotNull KeyBinding right, int total_width, int left_width, int right_width)
+    public void renderSection(int x, int y, int padding, int boxHeight, @NotNull KeyBinding left, @NotNull KeyBinding right, int totalWidth, int leftWidth, int rightWidth)
     {
-        if (total_width == left_width + padding + right_width) {
-            left_width = this.render_key_box(x, y, padding, box_height, left);
-            this.render_key_box(x + left_width + padding, y, padding, box_height, right);
+        if (totalWidth == leftWidth + padding + rightWidth) {
+            leftWidth = this.renderKeyBox(x, y, padding, boxHeight, left);
+            this.renderKeyBox(x + leftWidth + padding, y, padding, boxHeight, right);
         } else {
-            int max_width = (total_width - padding) / 2;
-            this.render_key_box(x + (max_width / 2 - left_width / 2), y, padding, box_height, left);
-            this.render_key_box(x + padding + max_width + (max_width / 2 - right_width / 2), y, padding, box_height, right);
+            int maxWidth = (totalWidth - padding) / 2;
+            this.renderKeyBox(x + (maxWidth / 2 - leftWidth / 2), y, padding, boxHeight, left);
+            this.renderKeyBox(x + padding + maxWidth + (maxWidth / 2 - rightWidth / 2), y, padding, boxHeight, right);
         }
     }
 
-    public int render_key_box(int x, int y, int padding, int box_height, @NotNull KeyBinding key_binding)
+    public int renderKeyBox(int x, int y, int padding, int boxHeight, @NotNull KeyBinding keyBinding)
     {
-        if (key_binding.isPressed())
-            return AuroraKeystrokes.render_text_box(this, this.client.textRenderer, x, y, padding, box_height, this.mod.config.get_text_display_mode().get_text(key_binding), this.mod.config.get_color_pressed(), this.mod.config.get_background_pressed());
+        if (keyBinding.isPressed())
+            return AuroraKeystrokes.renderTextBox(this, this.client.textRenderer, x, y, padding, boxHeight, this.mod.config.getTextDisplayMode().getText(keyBinding), this.mod.config.getColorPressed(), this.mod.config.getBackgroundPressed());
         else
-            return AuroraKeystrokes.render_text_box(this, this.client.textRenderer, x, y, padding, box_height, this.mod.config.get_text_display_mode().get_text(key_binding), this.mod.config.get_color_normal(), this.mod.config.get_background_normal());
+            return AuroraKeystrokes.renderTextBox(this, this.client.textRenderer, x, y, padding, boxHeight, this.mod.config.getTextDisplayMode().getText(keyBinding), this.mod.config.getColorNormal(), this.mod.config.getBackgroundNormal());
     }
 }

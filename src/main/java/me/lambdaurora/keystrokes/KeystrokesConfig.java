@@ -28,9 +28,9 @@ import java.awt.*;
  */
 public class KeystrokesConfig
 {
-    private final FileConfig       config            = FileConfig.builder("config/keystrokes.toml").concurrent().defaultResource("/config.toml").build();
+    private final FileConfig       config          = FileConfig.builder("config/keystrokes.toml").concurrent().defaultResource("/config.toml").build();
     private final AuroraKeystrokes mod;
-    private       TextDisplayMode  text_display_mode = TextDisplayMode.ACTION_NAME;
+    private       TextDisplayMode  textDisplayMode = TextDisplayMode.ACTION_NAME;
 
     public KeystrokesConfig(@NotNull AuroraKeystrokes mod)
     {
@@ -40,7 +40,7 @@ public class KeystrokesConfig
     public void load()
     {
         this.config.load();
-        this.text_display_mode = TextDisplayMode.by_id(this.config.getOrElse("hud.text_display_mode", "action_name")).orElseGet(() -> {
+        this.textDisplayMode = TextDisplayMode.byId(this.config.getOrElse("hud.text_display_mode", "action_name")).orElseGet(() -> {
             this.mod.log("Could not load `text_display_mode` property: invalid value.");
             return TextDisplayMode.ACTION_NAME;
         });
@@ -51,125 +51,125 @@ public class KeystrokesConfig
         this.config.save();
     }
 
-    public boolean does_render_hud()
+    public boolean doesRenderHud()
     {
         return this.config.getOrElse("hud.enable", true);
     }
 
-    public void set_render_hud(boolean render_hud)
+    public void setRenderHud(boolean renderHud)
     {
-        this.config.set("hud.enable", render_hud);
+        this.config.set("hud.enable", renderHud);
     }
 
-    public double get_x()
+    public double getX()
     {
         return this.config.getOrElse("hud.x", 10.0);
     }
 
-    public void set_x(double x)
+    public void setX(double x)
     {
         this.config.set("hud.x", x);
     }
 
-    public double get_y()
+    public double getY()
     {
         return this.config.getOrElse("hud.y", 10.0);
     }
 
-    public void set_y(double y)
+    public void setY(double y)
     {
         this.config.set("hud.y", y);
     }
 
-    public int get_padding()
+    public int getPadding()
     {
         return this.config.getOrElse("hud.padding", 4);
     }
 
-    public void set_padding(int padding)
+    public void setPadding(int padding)
     {
         this.config.set("hud.padding", padding);
     }
 
-    public boolean show_movement_boxes()
+    public boolean showMovementBoxes()
     {
         return this.config.getOrElse("hud.show_movement_boxes", true);
     }
 
-    public void set_movement_boxes(boolean show)
+    public void setMovementBoxes(boolean show)
     {
         this.config.set("hud.show_movement_boxes", show);
     }
 
-    public boolean show_attack_box()
+    public boolean showAttackBox()
     {
         return this.config.getOrElse("hud.show_attack_box", true);
     }
 
-    public void set_attack_box(boolean show)
+    public void setAttackBox(boolean show)
     {
         this.config.set("hud.show_attack_box", show);
     }
 
-    public boolean show_use_box()
+    public boolean showUseBox()
     {
         return this.config.getOrElse("hud.show_use_box", true);
     }
 
-    public void set_use_box(boolean show)
+    public void setUseBox(boolean show)
     {
         this.config.set("hud.show_use_box", show);
     }
 
-    public boolean show_sneak_box()
+    public boolean showSneakBox()
     {
         return this.config.getOrElse("hud.show_sneak_box", true);
     }
 
-    public void set_sneak_box(boolean show)
+    public void setSneakBox(boolean show)
     {
         this.config.set("hud.show_sneak_box", show);
     }
 
-    public boolean show_jump_box()
+    public boolean showJumpBox()
     {
         return this.config.getOrElse("hud.show_jump_box", true);
     }
 
-    public void set_jump_box(boolean show)
+    public void setJumpBox(boolean show)
     {
         this.config.set("hud.show_jump_box", show);
     }
 
-    public TextDisplayMode get_text_display_mode()
+    public TextDisplayMode getTextDisplayMode()
     {
-        return this.text_display_mode;
+        return this.textDisplayMode;
     }
 
-    public void set_text_display_mode(TextDisplayMode text_display_mode)
+    public void setTextDisplayMode(TextDisplayMode textDisplayMode)
     {
-        if (text_display_mode != this.text_display_mode) {
-            this.text_display_mode = text_display_mode;
-            this.config.set("hud.text_display_mode", text_display_mode.name().toLowerCase());
+        if (textDisplayMode != this.textDisplayMode) {
+            this.textDisplayMode = textDisplayMode;
+            this.config.set("hud.text_display_mode", textDisplayMode.name().toLowerCase());
         }
     }
 
-    public boolean show_cps()
+    public boolean showCps()
     {
         return this.config.getOrElse("cps.show", true);
     }
 
-    public void set_show_cps(boolean show)
+    public void setShowCps(boolean show)
     {
         this.config.set("cps.show", show);
     }
 
-    public boolean attached_cps()
+    public boolean attachedCps()
     {
         return this.config.getOrElse("cps.attached", true);
     }
 
-    public void set_attached_cps(boolean attached)
+    public void setAttachedCps(boolean attached)
     {
         this.config.set("cps.attached", attached);
     }
@@ -182,42 +182,42 @@ public class KeystrokesConfig
         return res;
     }
 
-    public Color get_color_normal()
+    public Color getColorNormal()
     {
-        return AuroraKeystrokes.parse_color(this.config.getOrElse("colors.normal", "#FFFFFFFF"));
+        return AuroraKeystrokes.parseColor(this.config.getOrElse("colors.normal", "#FFFFFFFF"));
     }
 
-    public void set_color_normal(@NotNull Color color)
+    public void setColorNormal(@NotNull Color color)
     {
         this.config.set("colors.normal", "#" + hex(color.getRed()) + hex(color.getGreen()) + hex(color.getBlue()) + hex(color.getAlpha()));
     }
 
-    public Color get_color_pressed()
+    public Color getColorPressed()
     {
-        return AuroraKeystrokes.parse_color(this.config.getOrElse("colors.pressed", "#FFA000FF"));
+        return AuroraKeystrokes.parseColor(this.config.getOrElse("colors.pressed", "#FFA000FF"));
     }
 
-    public void set_color_pressed(@NotNull Color color)
+    public void setColorPressed(@NotNull Color color)
     {
         this.config.set("colors.pressed", "#" + hex(color.getRed()) + hex(color.getGreen()) + hex(color.getBlue()) + hex(color.getAlpha()));
     }
 
-    public Color get_background_normal()
+    public Color getBackgroundNormal()
     {
-        return AuroraKeystrokes.parse_color(this.config.getOrElse("colors.background_normal", "#000000AA"));
+        return AuroraKeystrokes.parseColor(this.config.getOrElse("colors.background_normal", "#000000AA"));
     }
 
-    public void set_background_normal(@NotNull Color color)
+    public void setBackgroundNormal(@NotNull Color color)
     {
         this.config.set("colors.background_normal", "#" + hex(color.getRed()) + hex(color.getGreen()) + hex(color.getBlue()) + hex(color.getAlpha()));
     }
 
-    public Color get_background_pressed()
+    public Color getBackgroundPressed()
     {
-        return AuroraKeystrokes.parse_color(this.config.getOrElse("colors.background_pressed", "#FFFFFFAA"));
+        return AuroraKeystrokes.parseColor(this.config.getOrElse("colors.background_pressed", "#FFFFFFAA"));
     }
 
-    public void set_background_pressed(@NotNull Color color)
+    public void setBackgroundPressed(@NotNull Color color)
     {
         this.config.set("colors.background_pressed", "#" + hex(color.getRed()) + hex(color.getGreen()) + hex(color.getBlue()) + hex(color.getAlpha()));
     }
