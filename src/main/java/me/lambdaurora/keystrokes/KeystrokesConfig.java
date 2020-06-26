@@ -1,6 +1,6 @@
 /*
  * AuroraKeystrokes
- * Copyright (C) 2019  LambdAurora
+ * Copyright (C) 2020  LambdAurora
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -220,5 +220,21 @@ public class KeystrokesConfig
     public void setBackgroundPressed(@NotNull Color color)
     {
         this.config.set("colors.background_pressed", "#" + hex(color.getRed()) + hex(color.getGreen()) + hex(color.getBlue()) + hex(color.getAlpha()));
+    }
+
+    public boolean useRainbowText() {
+        return this.config.getOrElse("colors.rainbow", false);
+    }
+
+    public void setRainbowText(boolean rainbow) {
+        this.config.set("colors.rainbow", rainbow);
+    }
+
+    public double getRainbowSaturation() {
+        return this.config.getOrElse("colors.rainbow_saturation", 0.8D);
+    }
+
+    public void setRainbowSaturation(double saturation) {
+        this.config.set("colors.rainbow_saturation", saturation);
     }
 }

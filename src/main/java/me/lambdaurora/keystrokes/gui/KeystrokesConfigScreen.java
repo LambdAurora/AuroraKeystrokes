@@ -1,6 +1,6 @@
 /*
  * AuroraKeystrokes
- * Copyright (C) 2019  LambdAurora
+ * Copyright (C) 2020  LambdAurora
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ import net.minecraft.client.gui.screen.FatalErrorScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.options.Option;
-import net.minecraft.client.resource.language.I18n;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.NotNull;
@@ -56,21 +56,21 @@ public class KeystrokesConfigScreen extends Screen
         this.xOption = new SpruceDoubleOption("keystrokes.menu.x", 0.0, 100.0, 0.5F,
                 this.mod.config::getX,
                 this.mod.config::setX,
-                option -> "X: " + option.get(),
+                option -> new LiteralText("X: " + option.get()),
                 new TranslatableText("keystrokes.tooltip.x"));
         this.yOption = new SpruceDoubleOption("keystrokes.menu.y", 0.0, 100.0, 0.5F,
                 this.mod.config::getY,
                 this.mod.config::setY,
-                (option) -> "Y: " + option.get(),
+                (option) -> new LiteralText("Y: " + option.get()),
                 new TranslatableText("keystrokes.tooltip.y"));
         this.paddingOption = new SpruceDoubleOption("keystrokes.menu.padding", 0.0, 20.0, 1.0F,
                 () -> (double) this.mod.config.getPadding(),
                 newValue -> this.mod.config.setPadding(newValue.intValue()),
-                (option) -> option.getDisplayPrefix() + option.get(),
+                (option) -> option.getDisplayPrefix().append(String.valueOf(option.get())),
                 new TranslatableText("keystrokes.tooltip.padding"));
         this.textDisplayModeOption = new SpruceCyclingOption("keystrokes.menu.text_display_mode",
                 amount -> this.mod.config.setTextDisplayMode(this.mod.config.getTextDisplayMode().next()),
-                option -> option.getDisplayPrefix() + this.mod.config.getTextDisplayMode().getTranslatedName(),
+                option -> option.getDisplayPrefix().append(this.mod.config.getTextDisplayMode().getTranslatedName()),
                 new TranslatableText("keystrokes.tooltip.text_display_mode"));
     }
 
@@ -90,8 +90,8 @@ public class KeystrokesConfigScreen extends Screen
         int widgetHeight = 20;
         int margin = 4;
         int y = this.height / 4 + 24 + -16;
-        String showHudText = I18n.translate("keystrokes.menu.show_hud");
-        this.addButton(new SpruceCheckboxWidget((this.width / 2 - (24 + this.font.getStringWidth(showHudText)) / 2), (y - widgetHeight) - margin, widgetWidth, widgetHeight, showHudText,
+        TranslatableText showHudText = new TranslatableText("keystrokes.menu.show_hud");
+        this.addButton(new SpruceCheckboxWidget((this.width / 2 - (24 + this.textRenderer.getWidth(showHudText)) / 2), (y - widgetHeight) - margin, widgetWidth, widgetHeight, showHudText,
                 this.mod.config.doesRenderHud(), btn -> this.mod.setHudEnabled(btn.isChecked())));
         this.initLeftWidgets(y, widgetWidth, widgetHeight, margin);
         this.initRightWidgets(y, widgetWidth, widgetHeight, margin);
@@ -103,54 +103,55 @@ public class KeystrokesConfigScreen extends Screen
         this.addButton(this.xOption.createButton(null, x, y, widgetWidth));
         this.addButton(this.yOption.createButton(null, x, (y += widgetHeight + margin), widgetWidth));
         this.addButton(this.paddingOption.createButton(null, x, (y += widgetHeight + margin), widgetWidth));
-        this.addButton(new SpruceCheckboxWidget(x, (y += widgetHeight + margin), widgetWidth, widgetHeight, I18n.translate("keystrokes.menu.show_movement_boxes"),
+        this.addButton(new SpruceCheckboxWidget(x, (y += widgetHeight + margin), widgetWidth, widgetHeight, new TranslatableText("keystrokes.menu.show_movement_boxes"),
                 this.mod.config.showMovementBoxes(), btn -> this.mod.config.setMovementBoxes(btn.isChecked())));
-        this.addButton(new SpruceCheckboxWidget(x, (y += widgetHeight + margin), widgetWidth, widgetHeight, I18n.translate("keystrokes.menu.show_attack_box"),
+        this.addButton(new SpruceCheckboxWidget(x, (y += widgetHeight + margin), widgetWidth, widgetHeight, new TranslatableText("keystrokes.menu.show_attack_box"),
                 this.mod.config.showAttackBox(), btn -> this.mod.config.setAttackBox(btn.isChecked())));
-        this.addButton(new SpruceCheckboxWidget(x, (y += widgetHeight + margin), widgetWidth, widgetHeight, I18n.translate("keystrokes.menu.show_use_box"),
+        this.addButton(new SpruceCheckboxWidget(x, (y += widgetHeight + margin), widgetWidth, widgetHeight, new TranslatableText("keystrokes.menu.show_use_box"),
                 this.mod.config.showUseBox(), btn -> this.mod.config.setUseBox(btn.isChecked())));
-        this.addButton(new SpruceCheckboxWidget(x, (y += widgetHeight + margin), widgetWidth, widgetHeight, I18n.translate("keystrokes.menu.show_sneak_box"),
+        this.addButton(new SpruceCheckboxWidget(x, (y += widgetHeight + margin), widgetWidth, widgetHeight, new TranslatableText("keystrokes.menu.show_sneak_box"),
                 this.mod.config.showSneakBox(), btn -> this.mod.config.setSneakBox(btn.isChecked())));
-        this.addButton(new SpruceCheckboxWidget(x, y + (widgetHeight + margin), widgetWidth, widgetHeight, I18n.translate("keystrokes.menu.show_jump_box"),
+        this.addButton(new SpruceCheckboxWidget(x, y + (widgetHeight + margin), widgetWidth, widgetHeight, new TranslatableText("keystrokes.menu.show_jump_box"),
                 this.mod.config.showJumpBox(), btn -> this.mod.config.setJumpBox(btn.isChecked())));
     }
 
     private void initRightWidgets(int y, int widgetWidth, int widgetHeight, int margin)
     {
         int x = (this.width / 4) * 3 - widgetWidth / 2;
-        this.addButton(new ButtonWidget(x, y, widgetWidth, widgetHeight, I18n.translate("keystrokes.menu.open_color_config"), (button) -> {
+        this.addButton(new ButtonWidget(x, y, widgetWidth, widgetHeight, new TranslatableText("keystrokes.menu.open_color_config"), (button) -> {
             this.mod.config.save();
-            this.minecraft.openScreen(new KeystrokesColorConfigScreen(this.mod, this));
+            this.client.openScreen(new KeystrokesColorConfigScreen(this.mod, this));
         }));
         this.addButton(this.textDisplayModeOption.createButton(null, x, (y += widgetHeight + margin), widgetWidth));
-        this.addButton(new SpruceCheckboxWidget(x, (y += widgetHeight + margin), widgetWidth, widgetHeight, I18n.translate("keystrokes.menu.show_cps"), this.mod.config.showCps(), btn -> this.mod.config.setShowCps(btn.isChecked())));
-        this.addButton(new SpruceCheckboxWidget(x, (y += widgetHeight + margin), widgetWidth, widgetHeight, I18n.translate("keystrokes.menu.attach_cps"), this.mod.config.attachedCps(), btn -> this.mod.config.setAttachedCps(btn.isChecked())));
-        this.addButton(new SpruceButtonWidget(x, (y += widgetHeight + margin), widgetWidth, widgetHeight, I18n.translate("gui.done"), (button) -> {
+        this.addButton(new SpruceCheckboxWidget(x, (y += widgetHeight + margin), widgetWidth, widgetHeight, new TranslatableText("keystrokes.menu.show_cps"), this.mod.config.showCps(), btn -> this.mod.config.setShowCps(btn.isChecked())));
+        this.addButton(new SpruceCheckboxWidget(x, (y += widgetHeight + margin), widgetWidth, widgetHeight, new TranslatableText("keystrokes.menu.attach_cps"), this.mod.config.attachedCps(), btn -> this.mod.config.setAttachedCps(btn.isChecked())));
+        this.addButton(new SpruceButtonWidget(x, (y += widgetHeight + margin), widgetWidth, widgetHeight, new TranslatableText("gui.done"), (button) -> {
             this.mod.config.save();
-            this.minecraft.openScreen(null);
-            this.minecraft.mouse.lockCursor();
+            this.client.openScreen(null);
+            this.client.mouse.lockCursor();
         }));
-        this.addButton(new SpruceButtonWidget(x, y + (widgetHeight + margin) * 2, widgetWidth, widgetHeight, I18n.translate("keystrokes.menu.reset"), btn ->
-                this.minecraft.openScreen(new ConfirmScreen(confirm -> {
+        this.addButton(new SpruceButtonWidget(x, y + (widgetHeight + margin) * 2, widgetWidth, widgetHeight, new TranslatableText("keystrokes.menu.reset"), btn ->
+                this.client.openScreen(new ConfirmScreen(confirm -> {
                     if (confirm) {
                         if (new File("config/keystrokes.toml").delete()) {
                             this.mod.config.load();
-                            this.minecraft.openScreen(new KeystrokesConfigScreen(this.mod));
+                            this.client.openScreen(new KeystrokesConfigScreen(this.mod));
                         } else {
-                            this.minecraft.openScreen(new FatalErrorScreen(new TranslatableText("keystrokes.menu.reset"), I18n.translate("keystrokes.error.cannot_reset")));
+                            this.client.openScreen(new FatalErrorScreen(new TranslatableText("keystrokes.menu.reset"), new TranslatableText("keystrokes.error.cannot_reset")));
                         }
-                    } else this.minecraft.openScreen(this);
+                    } else this.client.openScreen(this);
                 }, new TranslatableText("keystrokes.menu.reset"), new TranslatableText("keystrokes.menu.confirm_reset")))));
     }
 
-    public void render(int mouseX, int mouseY, float delta)
+    @Override
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
     {
-        this.renderBackground();
+        this.renderBackground(matrices);
 
-        this.drawCenteredString(this.font, this.title.asFormattedString(), this.width / 2, 10, 16777215);
+        this.drawCenteredString(matrices, this.textRenderer, this.title.asString(), this.width / 2, 10, 16777215);
 
-        super.render(mouseX, mouseY, delta);
+        super.render(matrices, mouseX, mouseY, delta);
 
-        Tooltip.renderAll();
+        Tooltip.renderAll(matrices);
     }
 }

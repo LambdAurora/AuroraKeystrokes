@@ -1,6 +1,6 @@
 /*
  * AuroraKeystrokes
- * Copyright (C) 2019  LambdAurora
+ * Copyright (C) 2020  LambdAurora
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +22,9 @@ import me.lambdaurora.keystrokes.AuroraKeystrokes;
 import me.lambdaurora.spruceui.hud.Hud;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.options.KeyBinding;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.StringRenderable;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
@@ -47,7 +50,7 @@ public class KeystrokesHud extends Hud
     }
 
     @Override
-    public void render(float tickDelta)
+    public void render(MatrixStack matrices, float tickDelta)
     {
         int padding = this.mod.config.getPadding();
         String cpsText = "CPS: " + this.mod.cps;
@@ -93,27 +96,27 @@ public class KeystrokesHud extends Hud
 
         // Movements keys.
         if (this.mod.config.showMovementBoxes()) {
-            this.renderKeyBox(x + (totalWidth / 2 - boxWidth / 2), (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyForward);
-            this.renderSection(x, (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyLeft, this.client.options.keyRight, totalWidth, leftWidth, rightWidth);
+            this.renderKeyBox(matrices, x + (totalWidth / 2 - boxWidth / 2), (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyForward);
+            this.renderSection(matrices, x, (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyLeft, this.client.options.keyRight, totalWidth, leftWidth, rightWidth);
             boxWidth = this.getBoxWidth(this.client.options.keyBack);
-            this.renderKeyBox(x + (totalWidth / 2 - boxWidth / 2), (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyBack);
+            this.renderKeyBox(matrices, x + (totalWidth / 2 - boxWidth / 2), (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyBack);
         }
 
         // Interaction keys.
         if (this.mod.config.showAttackBox() && this.mod.config.showUseBox())
-            this.renderSection(x, (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyAttack, this.client.options.keyUse, totalWidth, attackWidth, useWidth);
+            this.renderSection(matrices, x, (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyAttack, this.client.options.keyUse, totalWidth, attackWidth, useWidth);
         else if (this.mod.config.showAttackBox())
-            this.renderKeyBox(x + (totalWidth / 2 - attackWidth / 2), (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyAttack);
+            this.renderKeyBox(matrices, x + (totalWidth / 2 - attackWidth / 2), (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyAttack);
         else if (this.mod.config.showUseBox())
-            this.renderKeyBox(x + (totalWidth / 2 - useWidth / 2), (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyUse);
+            this.renderKeyBox(matrices, x + (totalWidth / 2 - useWidth / 2), (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyUse);
 
         // More movements keys.
         if (this.mod.config.showSneakBox() && this.mod.config.showJumpBox())
-            this.renderSection(x, (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keySneak, this.client.options.keyJump, totalWidth, sneakWidth, jumpWidth);
+            this.renderSection(matrices, x, (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keySneak, this.client.options.keyJump, totalWidth, sneakWidth, jumpWidth);
         else if (this.mod.config.showSneakBox())
-            this.renderKeyBox(x + (totalWidth / 2 - sneakWidth / 2), (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keySneak);
+            this.renderKeyBox(matrices, x + (totalWidth / 2 - sneakWidth / 2), (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keySneak);
         else if (this.mod.config.showJumpBox())
-            this.renderKeyBox(x + (totalWidth / 2 - jumpWidth / 2), (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyJump);
+            this.renderKeyBox(matrices, x + (totalWidth / 2 - jumpWidth / 2), (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyJump);
 
         // CPS counter.
         if (this.mod.config.showCps()) {
@@ -126,7 +129,7 @@ public class KeystrokesHud extends Hud
                 cpsX = this.client.getWindow().getScaledWidth() - padding - boxWidth;
                 cpsY = this.client.getWindow().getScaledHeight() - padding - boxHeight;
             }
-            AuroraKeystrokes.renderTextBox(this, this.client.textRenderer, cpsX, cpsY, padding, boxHeight, cpsText, this.mod.config.getColorPressed(), this.mod.config.getBackgroundNormal());
+            AuroraKeystrokes.renderTextBox(matrices, this, this.client.textRenderer, cpsX, cpsY, padding, boxHeight, new LiteralText(cpsText), this.mod.config.getColorPressed(), this.mod.config.getBackgroundNormal());
         }
     }
 
@@ -154,28 +157,33 @@ public class KeystrokesHud extends Hud
         return this.getBoxWidth(this.mod.config.getTextDisplayMode().getText(keyBinding));
     }
 
-    public int getBoxWidth(@NotNull String text)
+    public int getBoxWidth(@NotNull StringRenderable text)
     {
-        return this.client.textRenderer.getStringWidth(text) + this.mod.config.getPadding() * 2;
+        return this.client.textRenderer.getWidth(text) + this.mod.config.getPadding() * 2;
     }
 
-    public void renderSection(int x, int y, int padding, int boxHeight, @NotNull KeyBinding left, @NotNull KeyBinding right, int totalWidth, int leftWidth, int rightWidth)
+    public int getBoxWidth(@NotNull String text)
+    {
+        return this.client.textRenderer.getWidth(text) + this.mod.config.getPadding() * 2;
+    }
+
+    public void renderSection(MatrixStack matrices, int x, int y, int padding, int boxHeight, @NotNull KeyBinding left, @NotNull KeyBinding right, int totalWidth, int leftWidth, int rightWidth)
     {
         if (totalWidth == leftWidth + padding + rightWidth) {
-            leftWidth = this.renderKeyBox(x, y, padding, boxHeight, left);
-            this.renderKeyBox(x + leftWidth + padding, y, padding, boxHeight, right);
+            leftWidth = this.renderKeyBox(matrices, x, y, padding, boxHeight, left);
+            this.renderKeyBox(matrices, x + leftWidth + padding, y, padding, boxHeight, right);
         } else {
             int maxWidth = (totalWidth - padding) / 2;
-            this.renderKeyBox(x + (maxWidth / 2 - leftWidth / 2), y, padding, boxHeight, left);
-            this.renderKeyBox(x + padding + maxWidth + (maxWidth / 2 - rightWidth / 2), y, padding, boxHeight, right);
+            this.renderKeyBox(matrices, x + (maxWidth / 2 - leftWidth / 2), y, padding, boxHeight, left);
+            this.renderKeyBox(matrices, x + padding + maxWidth + (maxWidth / 2 - rightWidth / 2), y, padding, boxHeight, right);
         }
     }
 
-    public int renderKeyBox(int x, int y, int padding, int boxHeight, @NotNull KeyBinding keyBinding)
+    public int renderKeyBox(MatrixStack matrices, int x, int y, int padding, int boxHeight, @NotNull KeyBinding keyBinding)
     {
         if (keyBinding.isPressed())
-            return AuroraKeystrokes.renderTextBox(this, this.client.textRenderer, x, y, padding, boxHeight, this.mod.config.getTextDisplayMode().getText(keyBinding), this.mod.config.getColorPressed(), this.mod.config.getBackgroundPressed());
+            return AuroraKeystrokes.renderTextBox(matrices, this, this.client.textRenderer, x, y, padding, boxHeight, this.mod.config.getTextDisplayMode().getText(keyBinding), this.mod.config.getColorPressed(), this.mod.config.getBackgroundPressed());
         else
-            return AuroraKeystrokes.renderTextBox(this, this.client.textRenderer, x, y, padding, boxHeight, this.mod.config.getTextDisplayMode().getText(keyBinding), this.mod.config.getColorNormal(), this.mod.config.getBackgroundNormal());
+            return AuroraKeystrokes.renderTextBox(matrices, this, this.client.textRenderer, x, y, padding, boxHeight, this.mod.config.getTextDisplayMode().getText(keyBinding), this.mod.config.getColorNormal(), this.mod.config.getBackgroundNormal());
     }
 }

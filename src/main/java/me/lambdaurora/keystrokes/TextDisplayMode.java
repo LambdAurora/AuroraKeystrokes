@@ -1,6 +1,6 @@
 /*
  * AuroraKeystrokes
- * Copyright (C) 2019  LambdAurora
+ * Copyright (C) 2020  LambdAurora
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,8 @@ package me.lambdaurora.keystrokes;
 
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import org.aperlambda.lambdacommon.utils.Nameable;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,12 +34,12 @@ import java.util.function.Function;
  */
 public enum TextDisplayMode implements Nameable
 {
-    ACTION_NAME(keyBinding -> I18n.translate(keyBinding.getId())),
-    KEY_NAME(KeyBinding::getLocalizedName);
+    ACTION_NAME(keyBinding -> new TranslatableText(keyBinding.getTranslationKey())),
+    KEY_NAME(KeyBinding::getBoundKeyLocalizedText);
 
-    private final Function<KeyBinding, String> nameMapper;
+    private final Function<KeyBinding, Text> nameMapper;
 
-    TextDisplayMode(@NotNull Function<KeyBinding, String> nameMapper)
+    TextDisplayMode(@NotNull Function<KeyBinding, Text> nameMapper)
     {
         this.nameMapper = nameMapper;
     }
@@ -60,9 +62,9 @@ public enum TextDisplayMode implements Nameable
      *
      * @return The translated name of this text display mode.
      */
-    public String getTranslatedName()
+    public TranslatableText getTranslatedName()
     {
-        return I18n.translate("keystrokes.text_display_mode." + this.getName());
+        return new TranslatableText("keystrokes.text_display_mode." + this.getName());
     }
 
     /**
@@ -71,7 +73,7 @@ public enum TextDisplayMode implements Nameable
      * @param keyBinding The specified key binding.
      * @return The text describing the key binding.
      */
-    public String getText(KeyBinding keyBinding)
+    public Text getText(KeyBinding keyBinding)
     {
         return this.nameMapper.apply(keyBinding);
     }

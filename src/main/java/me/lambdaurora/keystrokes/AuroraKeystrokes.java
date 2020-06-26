@@ -1,6 +1,6 @@
 /*
  * AuroraKeystrokes
- * Copyright (C) 2019  LambdAurora
+ * Copyright (C) 2020  LambdAurora
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,8 @@ import me.lambdaurora.spruceui.hud.HudManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.StringRenderable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.aperlambda.lambdacommon.utils.LambdaUtils;
@@ -106,6 +108,24 @@ public class AuroraKeystrokes implements ClientModInitializer
         return null;
     }
 
+    public static int getRainbowRGB(double x, double y)
+    {
+        float speed = 2600.0F;
+        return Color.HSBtoRGB((float) ((System.currentTimeMillis() - x * 10.0D - y * 10.0D) % speed) / speed,
+                (float) AuroraKeystrokes.get().config.getRainbowSaturation(),
+                0.9F);
+    }
+
+    public static void drawRainbowString(MatrixStack matrices, TextRenderer textRenderer, int x, int y, @NotNull String text)
+    {
+        for (char c : text.toCharArray()) {
+            int rgb = getRainbowRGB(x, y);
+            String tmp = String.valueOf(c);
+            textRenderer.draw(matrices, tmp, x, y, rgb);
+            x += textRenderer.getWidth(tmp);
+        }
+    }
+
     /**
      * Renders a text box with a background.
      *
@@ -120,12 +140,15 @@ public class AuroraKeystrokes implements ClientModInitializer
      * @param background   The background color of the box.
      * @return The width of the box.
      */
-    public static int renderTextBox(DrawableHelper helper, TextRenderer textRenderer, int x, int y, int padding, int boxHeight, @NotNull String text, @NotNull Color foreground, @NotNull Color background)
+    public static int renderTextBox(MatrixStack matrices, DrawableHelper helper, TextRenderer textRenderer, int x, int y, int padding, int boxHeight, @NotNull StringRenderable text, @NotNull Color foreground, @NotNull Color background)
     {
-        int textLength = textRenderer.getStringWidth(text);
+        int textLength = textRenderer.getWidth(text);
         int boxWidth = padding * 2 + textLength;
-        DrawableHelper.fill(x, y, x + boxWidth, y + boxHeight, background.getRGB());
-        helper.drawString(textRenderer, text, x + padding, y + padding + 1, foreground.getRGB());
+        DrawableHelper.fill(matrices, x, y, x + boxWidth, y + boxHeight, background.getRGB());
+        if (AuroraKeystrokes.get().config.useRainbowText())
+            drawRainbowString(matrices, textRenderer, x + padding, y + padding + 1, text.getString());
+        else
+            helper.drawTextWithShadow(matrices, textRenderer, text, x + padding, y + padding + 1, foreground.getRGB());
         return boxWidth;
     }
 }
