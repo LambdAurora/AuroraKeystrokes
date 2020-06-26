@@ -174,6 +174,16 @@ public class KeystrokesConfig
         this.config.set("cps.attached", attached);
     }
 
+    public LayoutMode getLayout()
+    {
+        return LayoutMode.fromName(this.config.getOrElse("hud.layout", "cross"));
+    }
+
+    public void setLayout(LayoutMode layout)
+    {
+        this.config.set("hud.layout", layout.getName());
+    }
+
     private String hex(int i)
     {
         String res = Integer.toHexString(i);
@@ -222,19 +232,23 @@ public class KeystrokesConfig
         this.config.set("colors.background_pressed", "#" + hex(color.getRed()) + hex(color.getGreen()) + hex(color.getBlue()) + hex(color.getAlpha()));
     }
 
-    public boolean useRainbowText() {
+    public boolean useRainbowText()
+    {
         return this.config.getOrElse("colors.rainbow", false);
     }
 
-    public void setRainbowText(boolean rainbow) {
+    public void setRainbowText(boolean rainbow)
+    {
         this.config.set("colors.rainbow", rainbow);
     }
 
-    public double getRainbowSaturation() {
+    public double getRainbowSaturation()
+    {
         return this.config.getOrElse("colors.rainbow_saturation", 0.8D);
     }
 
-    public void setRainbowSaturation(double saturation) {
+    public void setRainbowSaturation(double saturation)
+    {
         this.config.set("colors.rainbow_saturation", saturation);
     }
 }

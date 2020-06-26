@@ -1,6 +1,8 @@
 {
   "keystrokes.reloaded": "La configuration de AuroraKeystrokes est rechargé!",
   "keystrokes.saved": "La configuration de AuroraKeystrokes est sauvegardé!",
+  "keystrokes.layout.cross": "Croix",
+  "keystrokes.layout.pyramid": "Pyramide",
   "keystrokes.menu.show_hud": "Afficher les indicateurs",
   "keystrokes.menu.padding": "Padding",
   "keystrokes.menu.show_movement_boxes": "Afficher les indicateurs de mouvements",
@@ -27,6 +29,7 @@
   "keystrokes.menu.color.rainbow": "Texte arc-en-ciel",
   "keystrokes.menu.color.rainbow_saturation": "Saturation de l'arc-en-ciel",
   "keystrokes.menu.example_text": "Texte d'exemple",
+  "keystrokes.menu.layout": "Mise en page",
   "keystrokes.menu.title.main": "Paramètres de AuroraKeystrokes",
   "keystrokes.menu.title.colors": "Paramètres de couleurs de AuroraKeystrokes",
   "keystrokes.tooltip.color_config_panel": "Édite les couleurs de l'état indiqué.",

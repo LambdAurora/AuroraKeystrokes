@@ -47,6 +47,7 @@ public class KeystrokesConfigScreen extends Screen
     private final Option yOption;
     private final Option paddingOption;
     private final Option textDisplayModeOption;
+    private final Option layoutOption;
 
     public KeystrokesConfigScreen(@NotNull AuroraKeystrokes mod)
     {
@@ -72,6 +73,10 @@ public class KeystrokesConfigScreen extends Screen
                 amount -> this.mod.config.setTextDisplayMode(this.mod.config.getTextDisplayMode().next()),
                 option -> option.getDisplayPrefix().append(this.mod.config.getTextDisplayMode().getTranslatedName()),
                 new TranslatableText("keystrokes.tooltip.text_display_mode"));
+        this.layoutOption = new SpruceCyclingOption("keystrokes.menu.layout",
+                amount -> this.mod.config.setLayout(this.mod.config.getLayout().next()),
+                option -> option.getDisplayPrefix().append(new TranslatableText("keystrokes.layout." + this.mod.config.getLayout().getName())),
+                null);
     }
 
     @Override
@@ -125,6 +130,7 @@ public class KeystrokesConfigScreen extends Screen
         this.addButton(this.textDisplayModeOption.createButton(null, x, (y += widgetHeight + margin), widgetWidth));
         this.addButton(new SpruceCheckboxWidget(x, (y += widgetHeight + margin), widgetWidth, widgetHeight, new TranslatableText("keystrokes.menu.show_cps"), this.mod.config.showCps(), btn -> this.mod.config.setShowCps(btn.isChecked())));
         this.addButton(new SpruceCheckboxWidget(x, (y += widgetHeight + margin), widgetWidth, widgetHeight, new TranslatableText("keystrokes.menu.attach_cps"), this.mod.config.attachedCps(), btn -> this.mod.config.setAttachedCps(btn.isChecked())));
+        this.addButton(this.layoutOption.createButton(null, x, (y += widgetHeight + margin), widgetWidth));
         this.addButton(new SpruceButtonWidget(x, (y += widgetHeight + margin), widgetWidth, widgetHeight, new TranslatableText("gui.done"), (button) -> {
             this.mod.config.save();
             this.client.openScreen(null);

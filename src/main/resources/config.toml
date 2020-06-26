@@ -21,6 +21,8 @@
     show_jump_box = true
     # The text display mode, available values: ACTION_NAME and KEY_NAME.
     text_display_mode = "action_name"
+    # The layout mode.
+    layout = "cross"
 
 # CPS settings.
 [cps]

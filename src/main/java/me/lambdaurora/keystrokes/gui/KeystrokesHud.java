@@ -19,6 +19,7 @@
 package me.lambdaurora.keystrokes.gui;
 
 import me.lambdaurora.keystrokes.AuroraKeystrokes;
+import me.lambdaurora.keystrokes.LayoutMode;
 import me.lambdaurora.spruceui.hud.Hud;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.options.KeyBinding;
@@ -58,12 +59,16 @@ public class KeystrokesHud extends Hud
         // Sizes.
         int boxHeight = this.client.textRenderer.fontHeight + padding * 2;
         int leftWidth = this.getBoxWidth(this.client.options.keyLeft);
+        int backWidth = this.getBoxWidth(this.client.options.keyBack);
         int rightWidth = this.getBoxWidth(this.client.options.keyRight);
         int attackWidth = this.getBoxWidth(this.client.options.keyAttack);
         int useWidth = this.getBoxWidth(this.client.options.keyUse);
         int sneakWidth = this.getBoxWidth(this.client.options.keySneak);
         int jumpWidth = this.getBoxWidth(this.client.options.keyJump);
         int rightLeftWidth = leftWidth + padding + rightWidth;
+        if (this.mod.config.getLayout() == LayoutMode.PYRAMID) {
+            rightLeftWidth += padding + backWidth;
+        }
         int mouseWidth = attackWidth + padding + useWidth;
         int jumpSneakWidth = sneakWidth + padding + jumpWidth;
         if (!this.mod.config.showMovementBoxes())
@@ -96,10 +101,18 @@ public class KeystrokesHud extends Hud
 
         // Movements keys.
         if (this.mod.config.showMovementBoxes()) {
-            this.renderKeyBox(matrices, x + (totalWidth / 2 - boxWidth / 2), (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyForward);
-            this.renderSection(matrices, x, (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyLeft, this.client.options.keyRight, totalWidth, leftWidth, rightWidth);
-            boxWidth = this.getBoxWidth(this.client.options.keyBack);
-            this.renderKeyBox(matrices, x + (totalWidth / 2 - boxWidth / 2), (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyBack);
+            switch (this.mod.config.getLayout()) {
+                case PYRAMID:
+                    this.renderKeyBox(matrices, x + (totalWidth / 2 - boxWidth / 2), (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyForward);
+                    this.renderSection(matrices, x, (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyLeft, this.client.options.keyBack, this.client.options.keyRight, totalWidth, leftWidth, backWidth, rightWidth);
+                    break;
+                case CROSS:
+                default:
+                    this.renderKeyBox(matrices, x + (totalWidth / 2 - boxWidth / 2), (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyForward);
+                    this.renderSection(matrices, x, (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyLeft, this.client.options.keyRight, totalWidth, leftWidth, rightWidth);
+                    this.renderKeyBox(matrices, x + (totalWidth / 2 - backWidth / 2), (y += (padding + boxHeight)), padding, boxHeight, this.client.options.keyBack);
+                    break;
+            }
         }
 
         // Interaction keys.
@@ -177,6 +190,15 @@ public class KeystrokesHud extends Hud
             this.renderKeyBox(matrices, x + (maxWidth / 2 - leftWidth / 2), y, padding, boxHeight, left);
             this.renderKeyBox(matrices, x + padding + maxWidth + (maxWidth / 2 - rightWidth / 2), y, padding, boxHeight, right);
         }
+    }
+
+    public void renderSection(MatrixStack matrices, int x, int y, int padding, int boxHeight, @NotNull KeyBinding left, @NotNull KeyBinding center, @NotNull KeyBinding right, int totalWidth, int leftWidth, int centerWidth, int rightWidth)
+    {
+        int centerX = totalWidth / 2;
+        int maxWidth = (totalWidth - padding) / 3;
+        this.renderKeyBox(matrices, x + (centerX - leftWidth - padding - (centerWidth / 2)), y, padding, boxHeight, left);
+        this.renderKeyBox(matrices, x + (centerX - (centerWidth / 2)), y, padding, boxHeight, center);
+        this.renderKeyBox(matrices, x + (centerX + padding + (centerWidth / 2)), y, padding, boxHeight, right);
     }
 
     public int renderKeyBox(MatrixStack matrices, int x, int y, int padding, int boxHeight, @NotNull KeyBinding keyBinding)

@@ -1,6 +1,8 @@
 {
   "keystrokes.reloaded": "AuroraKeystrokes configuration reloaded!",
   "keystrokes.saved": "AuroraKeystrokes configuration saved!",
+  "keystrokes.layout.cross": "Cross",
+  "keystrokes.layout.pyramid": "Pyramid",
   "keystrokes.menu.show_hud": "Show HUD",
   "keystrokes.menu.padding": "Padding",
   "keystrokes.menu.show_movement_boxes": "Show movement boxes",
@@ -27,6 +29,7 @@
   "keystrokes.menu.color.rainbow": "Rainbow text",
   "keystrokes.menu.color.rainbow_saturation": "Rainbow saturation",
   "keystrokes.menu.example_text": "Example text",
+  "keystrokes.menu.layout": "Layout",
   "keystrokes.menu.title.main": "AuroraKeystrokes settings",
   "keystrokes.menu.title.colors": "AuroraKeystrokes colors settings",
   "keystrokes.tooltip.color_config_panel": "Configure the colors of the specified state.",
