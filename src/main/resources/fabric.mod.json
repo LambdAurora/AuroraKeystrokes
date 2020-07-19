@@ -12,7 +12,7 @@
     "sources": "https://github.com/LambdAurora/AuroraKeystrokes.git",
     "issues": "https://github.com/LambdAurora/AuroraKeystrokes/issues"
   },
-  "license": "GPLv3",
+  "license": "MIT",
   "icon": "assets/aurora_keystrokes/icon.png",
   "environment": "client",
   "entrypoints": {
