@@ -31,7 +31,7 @@
     "fabric": "*",
     "minecraft": ">=1.16",
     "cotton-client-commands": ">=1.0.1+1.16-rc1",
-    "spruceui": ">=1.5.0"
+    "spruceui": ">=1.5.12"
   },
   "custom": {
     "modmenu:clientsideOnly": true

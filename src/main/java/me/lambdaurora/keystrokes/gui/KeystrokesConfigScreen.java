@@ -12,6 +12,7 @@ package me.lambdaurora.keystrokes.gui;
 import me.lambdaurora.keystrokes.AuroraKeystrokes;
 import me.lambdaurora.spruceui.SpruceButtonWidget;
 import me.lambdaurora.spruceui.SpruceCheckboxWidget;
+import me.lambdaurora.spruceui.SpruceTexts;
 import me.lambdaurora.spruceui.Tooltip;
 import me.lambdaurora.spruceui.option.SpruceCyclingOption;
 import me.lambdaurora.spruceui.option.SpruceDoubleOption;
@@ -42,7 +43,7 @@ public class KeystrokesConfigScreen extends Screen
 
     public KeystrokesConfigScreen(@NotNull AuroraKeystrokes mod)
     {
-        super(new LiteralText("AuroraKeystrokes Config"));
+        super(new TranslatableText("keystrokes.menu.title.main"));
         this.mod = mod;
 
         this.xOption = new SpruceDoubleOption("keystrokes.menu.x", 0.0, 100.0, 0.5F,
@@ -85,7 +86,7 @@ public class KeystrokesConfigScreen extends Screen
         int widgetWidth = 204;
         int widgetHeight = 20;
         int margin = 4;
-        int y = this.height / 4 + 24 + -16;
+        int y = this.height / 4 + 24 + -32;
         TranslatableText showHudText = new TranslatableText("keystrokes.menu.show_hud");
         this.addButton(new SpruceCheckboxWidget((this.width / 2 - (24 + this.textRenderer.getWidth(showHudText)) / 2), (y - widgetHeight) - margin, widgetWidth, widgetHeight, showHudText,
                 this.mod.config.doesRenderHud(), btn -> this.mod.setHudEnabled(btn.isChecked())));
@@ -122,30 +123,29 @@ public class KeystrokesConfigScreen extends Screen
         this.addButton(new SpruceCheckboxWidget(x, (y += widgetHeight + margin), widgetWidth, widgetHeight, new TranslatableText("keystrokes.menu.show_cps"), this.mod.config.showCps(), btn -> this.mod.config.setShowCps(btn.isChecked())));
         this.addButton(new SpruceCheckboxWidget(x, (y += widgetHeight + margin), widgetWidth, widgetHeight, new TranslatableText("keystrokes.menu.attach_cps"), this.mod.config.attachedCps(), btn -> this.mod.config.setAttachedCps(btn.isChecked())));
         this.addButton(this.layoutOption.createButton(null, x, (y += widgetHeight + margin), widgetWidth));
-        this.addButton(new SpruceButtonWidget(x, (y += widgetHeight + margin), widgetWidth, widgetHeight, new TranslatableText("gui.done"), (button) -> {
+        this.addButton(new SpruceButtonWidget(x, (y += widgetHeight + margin), widgetWidth, widgetHeight, SpruceTexts.GUI_DONE, (button) -> {
             this.mod.config.save();
             this.client.openScreen(null);
             this.client.mouse.lockCursor();
         }));
-        this.addButton(new SpruceButtonWidget(x, y + (widgetHeight + margin) * 2, widgetWidth, widgetHeight, new TranslatableText("keystrokes.menu.reset"), btn ->
+        this.addButton(new SpruceButtonWidget(x, y + (widgetHeight + margin) * 2, widgetWidth, widgetHeight, SpruceTexts.RESET_TEXT, btn ->
                 this.client.openScreen(new ConfirmScreen(confirm -> {
                     if (confirm) {
                         if (new File("config/keystrokes.toml").delete()) {
                             this.mod.config.load();
                             this.client.openScreen(new KeystrokesConfigScreen(this.mod));
                         } else {
-                            this.client.openScreen(new FatalErrorScreen(new TranslatableText("keystrokes.menu.reset"), new TranslatableText("keystrokes.error.cannot_reset")));
+                            this.client.openScreen(new FatalErrorScreen(SpruceTexts.RESET_TEXT, new TranslatableText("keystrokes.error.cannot_reset")));
                         }
                     } else this.client.openScreen(this);
-                }, new TranslatableText("keystrokes.menu.reset"), new TranslatableText("keystrokes.menu.confirm_reset")))));
+                }, SpruceTexts.RESET_TEXT, new TranslatableText("keystrokes.menu.confirm_reset")))));
     }
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
     {
         this.renderBackground(matrices);
-
-        this.drawCenteredString(matrices, this.textRenderer, this.title.asString(), this.width / 2, 10, 16777215);
+        this.drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 10, 16777215);
 
         super.render(matrices, mouseX, mouseY, delta);
 

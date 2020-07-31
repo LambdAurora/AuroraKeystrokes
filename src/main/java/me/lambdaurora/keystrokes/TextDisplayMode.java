@@ -11,6 +11,7 @@ package me.lambdaurora.keystrokes;
 
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import org.aperlambda.lambdacommon.utils.Nameable;
@@ -26,7 +27,13 @@ import java.util.function.Function;
 public enum TextDisplayMode implements Nameable
 {
     ACTION_NAME(keyBinding -> new TranslatableText(keyBinding.getTranslationKey())),
-    KEY_NAME(KeyBinding::getBoundKeyLocalizedText);
+    KEY_NAME(keyBinding -> {
+        Text text = keyBinding.getBoundKeyLocalizedText();
+        String str = text.asString();
+        if (str.length() == 1)
+            return new LiteralText(str.toUpperCase());
+        return text;
+    });
 
     private final Function<KeyBinding, Text> nameMapper;
 

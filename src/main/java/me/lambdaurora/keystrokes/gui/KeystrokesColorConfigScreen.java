@@ -12,6 +12,7 @@ package me.lambdaurora.keystrokes.gui;
 import me.lambdaurora.keystrokes.AuroraKeystrokes;
 import me.lambdaurora.keystrokes.ColorConfigPanel;
 import me.lambdaurora.keystrokes.KeystrokesConfig;
+import me.lambdaurora.spruceui.SpruceTexts;
 import me.lambdaurora.spruceui.Tooltip;
 import me.lambdaurora.spruceui.option.SpruceBooleanOption;
 import me.lambdaurora.spruceui.option.SpruceCyclingOption;
@@ -137,7 +138,7 @@ public class KeystrokesColorConfigScreen extends Screen
         int widgetWidth = 204;
         int widgetHeight = 20;
         int margin = 4;
-        int y = this.height / 4 + 24 + -16;
+        int y = this.height / 4 + 24 + -32;
         this.initColors();
         this.initLeftWidgets(y, widgetWidth, widgetHeight, margin);
         this.initRightWidgets(y, widgetWidth, widgetHeight, margin);
@@ -166,7 +167,7 @@ public class KeystrokesColorConfigScreen extends Screen
         this.addButton(this.bbOption.createButton(null, x, (y += widgetHeight + margin), widgetWidth));
         this.addButton(this.baOption.createButton(null, x, (y += widgetHeight + margin), widgetWidth));
         this.addButton(this.rainbowSaturationButton = this.rainbowSaturation.createButton(null, x, (y += widgetHeight + margin), widgetWidth));
-        this.addButton(new ButtonWidget(x, (y += widgetHeight + margin), widgetWidth, widgetHeight, new TranslatableText("gui.done"), (button) -> {
+        this.addButton(new ButtonWidget(x, (y += widgetHeight + margin), widgetWidth, widgetHeight, SpruceTexts.GUI_DONE, (button) -> {
             this.applyColors();
             this.mod.config.save();
             this.client.openScreen(this.parent);
