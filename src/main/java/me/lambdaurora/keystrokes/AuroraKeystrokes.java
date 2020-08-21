@@ -15,7 +15,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.StringRenderable;
+import net.minecraft.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.aperlambda.lambdacommon.utils.LambdaUtils;
@@ -26,6 +26,10 @@ import java.util.Timer;
 
 /**
  * Represents the mod instance of AuroraKeystrokes.
+ *
+ * @author LambdAurora
+ * @version 1.2.4
+ * @since 1.0.0
  */
 public class AuroraKeystrokes implements ClientModInitializer
 {
@@ -120,7 +124,6 @@ public class AuroraKeystrokes implements ClientModInitializer
     /**
      * Renders a text box with a background.
      *
-     * @param helper       The drawable helper.
      * @param textRenderer The text renderer.
      * @param x            The x position of the text box.
      * @param y            The y position of the text box.
@@ -131,7 +134,7 @@ public class AuroraKeystrokes implements ClientModInitializer
      * @param background   The background color of the box.
      * @return The width of the box.
      */
-    public static int renderTextBox(MatrixStack matrices, DrawableHelper helper, TextRenderer textRenderer, int x, int y, int padding, int boxHeight, @NotNull StringRenderable text, @NotNull Color foreground, @NotNull Color background)
+    public static int renderTextBox(MatrixStack matrices, TextRenderer textRenderer, int x, int y, int padding, int boxHeight, @NotNull Text text, @NotNull Color foreground, @NotNull Color background)
     {
         int textLength = textRenderer.getWidth(text);
         int boxWidth = padding * 2 + textLength;
@@ -139,7 +142,7 @@ public class AuroraKeystrokes implements ClientModInitializer
         if (AuroraKeystrokes.get().config.useRainbowText())
             drawRainbowString(matrices, textRenderer, x + padding, y + padding + 1, text.getString());
         else
-            helper.drawTextWithShadow(matrices, textRenderer, text, x + padding, y + padding + 1, foreground.getRGB());
+            DrawableHelper.drawTextWithShadow(matrices, textRenderer, text, x + padding, y + padding + 1, foreground.getRGB());
         return boxWidth;
     }
 }

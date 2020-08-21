@@ -29,8 +29,8 @@
   "depends": {
     "fabricloader": ">=0.8.0",
     "fabric": "*",
-    "minecraft": ">=1.16",
+    "minecraft": ">=1.16.2",
     "cotton-client-commands": ">=1.0.1+1.16-rc1",
-    "spruceui": ">=1.5.12"
+    "spruceui": ">=1.6.4"
   }
 }

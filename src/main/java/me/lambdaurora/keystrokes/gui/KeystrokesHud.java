@@ -16,7 +16,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.StringRenderable;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
@@ -133,7 +133,7 @@ public class KeystrokesHud extends Hud
                 cpsX = this.client.getWindow().getScaledWidth() - padding - boxWidth;
                 cpsY = this.client.getWindow().getScaledHeight() - padding - boxHeight;
             }
-            AuroraKeystrokes.renderTextBox(matrices, this, this.client.textRenderer, cpsX, cpsY, padding, boxHeight, new LiteralText(cpsText), this.mod.config.getColorPressed(), this.mod.config.getBackgroundNormal());
+            AuroraKeystrokes.renderTextBox(matrices, this.client.textRenderer, cpsX, cpsY, padding, boxHeight, new LiteralText(cpsText), this.mod.config.getColorPressed(), this.mod.config.getBackgroundNormal());
         }
     }
 
@@ -161,7 +161,7 @@ public class KeystrokesHud extends Hud
         return this.getBoxWidth(this.mod.config.getTextDisplayMode().getText(keyBinding));
     }
 
-    public int getBoxWidth(@NotNull StringRenderable text)
+    public int getBoxWidth(@NotNull Text text)
     {
         return this.client.textRenderer.getWidth(text) + this.mod.config.getPadding() * 2;
     }
@@ -195,8 +195,8 @@ public class KeystrokesHud extends Hud
     public int renderKeyBox(MatrixStack matrices, int x, int y, int padding, int boxHeight, @NotNull KeyBinding keyBinding)
     {
         if (keyBinding.isPressed())
-            return AuroraKeystrokes.renderTextBox(matrices, this, this.client.textRenderer, x, y, padding, boxHeight, this.mod.config.getTextDisplayMode().getText(keyBinding), this.mod.config.getColorPressed(), this.mod.config.getBackgroundPressed());
+            return AuroraKeystrokes.renderTextBox(matrices, this.client.textRenderer, x, y, padding, boxHeight, this.mod.config.getTextDisplayMode().getText(keyBinding), this.mod.config.getColorPressed(), this.mod.config.getBackgroundPressed());
         else
-            return AuroraKeystrokes.renderTextBox(matrices, this, this.client.textRenderer, x, y, padding, boxHeight, this.mod.config.getTextDisplayMode().getText(keyBinding), this.mod.config.getColorNormal(), this.mod.config.getBackgroundNormal());
+            return AuroraKeystrokes.renderTextBox(matrices, this.client.textRenderer, x, y, padding, boxHeight, this.mod.config.getTextDisplayMode().getText(keyBinding), this.mod.config.getColorNormal(), this.mod.config.getBackgroundNormal());
     }
 }

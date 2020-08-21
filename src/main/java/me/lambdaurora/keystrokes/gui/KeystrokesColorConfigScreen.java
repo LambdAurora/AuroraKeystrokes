@@ -22,6 +22,7 @@ import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.options.Option;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,47 +62,47 @@ public class KeystrokesColorConfigScreen extends Screen
                     this.children.clear();
                     this.init();
                 },
-                option -> option.getDisplayPrefix().append(this.panel.getTranslatedName()),
+                option -> option.getDisplayText(this.panel.getText()),
                 new TranslatableText("keystrokes.tooltip.color_config_panel"));
         this.frOption = new SpruceDoubleOption("keystrokes.menu.color_foreground_r", 0.0, 255.0, 1.0F,
                 () -> (double) this.r,
                 newValue -> this.r = newValue.intValue(),
-                option -> option.getDisplayPrefix().append(String.valueOf((int) option.get())),
+                option -> option.getDisplayText(Text.of(String.valueOf((int) option.get()))),
                 null);
         this.fgOption = new SpruceDoubleOption("keystrokes.menu.color_foreground_g", 0.0, 255.0, 1.0F,
                 () -> (double) this.g,
                 newValue -> this.g = newValue.intValue(),
-                option -> option.getDisplayPrefix().append(String.valueOf((int) option.get())),
+                option -> option.getDisplayText(Text.of(String.valueOf((int) option.get()))),
                 null);
         this.fbOption = new SpruceDoubleOption("keystrokes.menu.color_foreground_b", 0.0, 255.0, 1.0F,
                 () -> (double) this.b,
                 newValue -> this.b = newValue.intValue(),
-                option -> option.getDisplayPrefix().append(String.valueOf((int) option.get())),
+                option -> option.getDisplayText(Text.of(String.valueOf((int) option.get()))),
                 null);
         this.faOption = new SpruceDoubleOption("keystrokes.menu.color_foreground_a", 0.0, 255.0, 1.0F,
                 () -> (double) this.a,
                 newValue -> this.a = newValue.intValue(),
-                option -> option.getDisplayPrefix().append(String.valueOf((int) option.get())),
+                option -> option.getDisplayText(Text.of(String.valueOf((int) option.get()))),
                 null);
         this.brOption = new SpruceDoubleOption("keystrokes.menu.color_background_r", 0.0, 255.0, 1.0F,
                 () -> (double) this.br,
                 newValue -> this.br = newValue.intValue(),
-                option -> option.getDisplayPrefix().append(String.valueOf((int) option.get())),
+                option -> option.getDisplayText(Text.of(String.valueOf((int) option.get()))),
                 null);
         this.bgOption = new SpruceDoubleOption("keystrokes.menu.color_background_g", 0.0, 255.0, 1.0F,
                 () -> (double) this.bg,
                 newValue -> this.bg = newValue.intValue(),
-                option -> option.getDisplayPrefix().append(String.valueOf((int) option.get())),
+                option -> option.getDisplayText(Text.of(String.valueOf((int) option.get()))),
                 null);
         this.bbOption = new SpruceDoubleOption("keystrokes.menu.color_background_b", 0.0, 255.0, 1.0F,
                 () -> (double) this.bb,
                 newValue -> this.bb = newValue.intValue(),
-                option -> option.getDisplayPrefix().append(String.valueOf((int) option.get())),
+                option -> option.getDisplayText(Text.of(String.valueOf((int) option.get()))),
                 null);
         this.baOption = new SpruceDoubleOption("keystrokes.menu.color_background_a", 0.0, 255.0, 1.0F,
                 () -> (double) this.ba,
                 newValue -> this.ba = newValue.intValue(),
-                option -> option.getDisplayPrefix().append(String.valueOf((int) option.get())),
+                option -> option.getDisplayText(Text.of(String.valueOf((int) option.get()))),
                 null);
         this.rainbowText = new SpruceBooleanOption("keystrokes.menu.color.rainbow",
                 this.mod.config::useRainbowText,
@@ -110,7 +111,7 @@ public class KeystrokesColorConfigScreen extends Screen
         this.rainbowSaturation = new SpruceDoubleOption("keystrokes.menu.color.rainbow_saturation", 0.0, 1.0, 0.05F,
                 this.mod.config::getRainbowSaturation,
                 this.mod.config::setRainbowSaturation,
-                option -> option.getDisplayPrefix().append(option.get() == 1.0 ? "1.0" : "0." + (int) (option.get() * 100)),
+                option -> option.getDisplayText(Text.of(option.get() == 1.0 ? "1.0" : "0." + (int) (option.get() * 100))),
                 new TranslatableText("keystrokes.tooltip.rainbow_saturation"));
     }
 
@@ -223,7 +224,7 @@ public class KeystrokesColorConfigScreen extends Screen
         TranslatableText example = new TranslatableText("keystrokes.menu.example_text");
         int y = this.height / 4 + 24 + -16;
         int padding = (20 - this.textRenderer.fontHeight) / 2;
-        AuroraKeystrokes.renderTextBox(matrices, this, this.textRenderer, (this.width / 2 - this.textRenderer.getWidth(example) / 2), y / 2, padding, 20, example, new Color(r, g, b, a), new Color(br, bg, bb, ba));
+        AuroraKeystrokes.renderTextBox(matrices, this.textRenderer, (this.width / 2 - this.textRenderer.getWidth(example) / 2), y / 2, padding, 20, example, new Color(r, g, b, a), new Color(br, bg, bb, ba));
 
         super.render(matrices, mouseX, mouseY, delta);
 

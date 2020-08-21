@@ -9,7 +9,8 @@
 
 package me.lambdaurora.keystrokes;
 
-import net.minecraft.client.resource.language.I18n;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import org.aperlambda.lambdacommon.utils.Nameable;
 import org.jetbrains.annotations.NotNull;
 
@@ -77,13 +78,13 @@ public enum ColorConfigPanel implements Nameable
     }
 
     /**
-     * Gets the translated name of this color config panel.
+     * Gets the text of this color config panel.
      *
-     * @return The translated name of this color config panel.
+     * @return The text of this color config panel.
      */
-    public String getTranslatedName()
+    public Text getText()
     {
-        return I18n.translate("keystrokes.color_config_panel." + this.getName());
+        return new TranslatableText("keystrokes.color_config_panel." + this.getName());
     }
 
     @Override

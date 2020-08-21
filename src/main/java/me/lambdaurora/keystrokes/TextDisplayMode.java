@@ -56,11 +56,11 @@ public enum TextDisplayMode implements Nameable
     }
 
     /**
-     * Gets the translated name of this text display mode.
+     * Gets the text of this text display mode.
      *
-     * @return The translated name of this text display mode.
+     * @return The text of this text display mode.
      */
-    public TranslatableText getTranslatedName()
+    public Text getText()
     {
         return new TranslatableText("keystrokes.text_display_mode." + this.getName());
     }
