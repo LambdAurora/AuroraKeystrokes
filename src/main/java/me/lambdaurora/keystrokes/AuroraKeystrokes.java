@@ -9,9 +9,11 @@
 
 package me.lambdaurora.keystrokes;
 
+import me.lambdaurora.keystrokes.command.KeystrokesCommand;
 import me.lambdaurora.keystrokes.gui.KeystrokesHud;
 import me.lambdaurora.spruceui.hud.HudManager;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
@@ -50,6 +52,8 @@ public class AuroraKeystrokes implements ClientModInitializer
 
         HudManager.register(this.hud = new KeystrokesHud(this));
         this.hud.setVisible(this.config.doesRenderHud());
+
+        KeystrokesCommand.registerCommands(ClientCommandManager.DISPATCHER);
     }
 
     /**

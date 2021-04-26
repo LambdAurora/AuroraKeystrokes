@@ -10,8 +10,8 @@
 package me.lambdaurora.keystrokes.command;
 
 import com.mojang.brigadier.CommandDispatcher;
-import io.github.cottonmc.clientcommands.ClientCommandPlugin;
-import io.github.cottonmc.clientcommands.CottonClientCommandSource;
+import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import me.lambdaurora.keystrokes.AuroraKeystrokes;
 import me.lambdaurora.keystrokes.gui.KeystrokesConfigScreen;
 import net.minecraft.client.MinecraftClient;
@@ -21,15 +21,14 @@ import org.aperlambda.lambdacommon.utils.LambdaUtils;
 
 import java.util.Timer;
 
-import static io.github.cottonmc.clientcommands.ArgumentBuilders.literal;
+import static net.fabricmc.fabric.api.client.command.v1.ClientCommandManager.literal;
 
 /**
  * Represents the client command of AuroraKeystrokes.
  */
-public class KeystrokesCommand implements ClientCommandPlugin
+public class KeystrokesCommand
 {
-    @Override
-    public void registerCommands(CommandDispatcher<CottonClientCommandSource> dispatcher)
+    public static void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher)
     {
         dispatcher.register(literal("keystrokes")
                 .then(literal("reload")
