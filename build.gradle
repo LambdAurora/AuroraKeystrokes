@@ -20,10 +20,6 @@ repositories {
 		url = 'https://aperlambda.github.io/maven'
 	}
 	maven { url = "https://jitpack.io" }
-	maven {
-		name = 'CottonMC'
-		url = 'https://server.bbkr.space/artifactory/libs-release'
-	}
 }
 
 configurations {
@@ -38,8 +34,6 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	modImplementation "io.github.cottonmc:cotton-client-commands:1.0.1+1.16-rc1"
-	include "io.github.cottonmc:cotton-client-commands:1.0.1+1.16-rc1"
 
 	modImplementation "com.github.lambdaurora:spruceui:${project.spruceui_version}"
 	include "com.github.lambdaurora:spruceui:${project.spruceui_version}"

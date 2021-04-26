@@ -18,9 +18,6 @@
   "entrypoints": {
     "client": [
       "me.lambdaurora.keystrokes.AuroraKeystrokes"
-    ],
-    "cotton-client-commands": [
-      "me.lambdaurora.keystrokes.command.KeystrokesCommand"
     ]
   },
   "mixins": [
@@ -29,8 +26,8 @@
   "depends": {
     "fabricloader": ">=0.8.0",
     "fabric": "*",
+    "fabric-command-api-v1": ">=1.1.0",
     "minecraft": ">=1.16.2",
-    "cotton-client-commands": ">=1.0.1+1.16-rc1",
     "spruceui": ">=1.6.4"
   }
 }
