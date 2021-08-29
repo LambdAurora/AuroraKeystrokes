@@ -17,7 +17,6 @@ import dev.lambdaurora.spruceui.widget.SpruceButtonWidget;
 import me.lambdaurora.keystrokes.AuroraKeystrokes;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.FatalErrorScreen;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;

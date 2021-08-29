@@ -149,15 +149,6 @@ public class KeystrokesColorConfigScreen extends SpruceScreen
 
     private void initLeftWidgets(int widgetWidth, int widgetHeight, int margin)
     {
-        //int x = this.width / 4 - widgetWidth / 2;
-        //this.foregroundButtons.clear();
-//        this.addDrawableChild(this.frOption.createWidget(x, (y += widgetHeight + margin), widgetWidth));
-//        this.addDrawableChild(this.fgOption.createWidget(x, (y += widgetHeight + margin), widgetWidth));
-//        this.addDrawableChild(this.fbOption.createWidget(x, (y += widgetHeight + margin), widgetWidth));
-//        this.addDrawableChild(this.faOption.createWidget(x, (y += widgetHeight + margin), widgetWidth));
-//        this.foregroundButtons.add(this.addDrawable(this.frOption.createWidget()));
-//        this.addDrawableChild(this.rainbowText.createWidget(x, (y += widgetHeight + margin), widgetWidth));
-//        this.addDrawableChild(this.configPanelOption.createWidget(x, (y + widgetHeight + margin), widgetWidth));
         var container = new SpruceContainerWidget(Position.origin(), width, (widgetHeight + margin) * 4); // Width/height and position may need to be tweaked
         container.addChild(this.frOption.createWidget(Position.origin(), widgetWidth));
         container.addChild(this.fgOption.createWidget(Position.origin(), widgetWidth));
@@ -170,17 +161,6 @@ public class KeystrokesColorConfigScreen extends SpruceScreen
 
     private void initRightWidgets(int widgetWidth, int widgetHeight, int margin)
     {
-//        int x = (this.width / 4) * 3 - widgetWidth / 2;
-//        this.addDrawableChild(this.brOption.createWidget(x, (y += widgetHeight + margin), widgetWidth));
-//        this.addDrawableChild(this.bgOption.createWidget(x, (y += widgetHeight + margin), widgetWidth));
-//        this.addDrawableChild(this.bbOption.createWidget(x, (y += widgetHeight + margin), widgetWidth));
-//        this.addDrawableChild(this.baOption.createWidget(x, (y += widgetHeight + margin), widgetWidth));
-//        this.addDrawableChild(this.rainbowSaturationButton = this.rainbowSaturation.createWidget(x, (y += widgetHeight + margin), widgetWidth));
-//        this.addDrawableChild(new ButtonWidget(x, (y += widgetHeight + margin), widgetWidth, widgetHeight, SpruceTexts.GUI_DONE, (button) -> {
-//            this.applyColors();
-//            this.mod.config.save();
-//            this.client.setScreen(this.parent);
-//        }));
         var container = new SpruceContainerWidget(Position.origin(), width, (widgetHeight + margin) * 4);
         container.addChild(this.brOption.createWidget(Position.origin(), widgetWidth));
         container.addChild(this.brOption.createWidget(Position.origin(), widgetWidth));
