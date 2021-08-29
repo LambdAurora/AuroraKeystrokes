@@ -10,10 +10,9 @@
 package me.lambdaurora.keystrokes.command;
 
 import com.mojang.brigadier.CommandDispatcher;
-import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
-import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import me.lambdaurora.keystrokes.AuroraKeystrokes;
 import me.lambdaurora.keystrokes.gui.KeystrokesConfigScreen;
+import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
@@ -45,7 +44,7 @@ public class KeystrokesCommand
                         }))
                 .executes(ctx -> {
                     new Timer().schedule(LambdaUtils.newTimerTaskFromLambda(() ->
-                            MinecraftClient.getInstance().openScreen(new KeystrokesConfigScreen(AuroraKeystrokes.get()))), 2);
+                            MinecraftClient.getInstance().setScreen(new KeystrokesConfigScreen(AuroraKeystrokes.get()))), 2);
                     return 1;
                 }));
     }
