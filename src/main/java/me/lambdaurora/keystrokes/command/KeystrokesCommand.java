@@ -19,6 +19,7 @@ import net.minecraft.util.Formatting;
 import org.aperlambda.lambdacommon.utils.LambdaUtils;
 
 import java.util.Timer;
+import java.util.TimerTask;
 
 import static net.fabricmc.fabric.api.client.command.v1.ClientCommandManager.literal;
 
@@ -43,8 +44,13 @@ public class KeystrokesCommand
                             return 1;
                         }))
                 .executes(ctx -> {
-                    new Timer().schedule(LambdaUtils.newTimerTaskFromLambda(() ->
-                            MinecraftClient.getInstance().setScreen(new KeystrokesConfigScreen(AuroraKeystrokes.get()))), 2);
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            var client = MinecraftClient.getInstance();
+                            client.execute(() -> client.setScreen(new KeystrokesConfigScreen(AuroraKeystrokes.get())));
+                        }
+                    }, 2);
                     return 1;
                 }));
     }

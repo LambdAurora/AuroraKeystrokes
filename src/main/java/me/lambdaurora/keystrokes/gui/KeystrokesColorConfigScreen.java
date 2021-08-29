@@ -139,40 +139,44 @@ public class KeystrokesColorConfigScreen extends SpruceScreen
         int widgetWidth = 204;
         int widgetHeight = 20;
         int margin = 4;
+        int y = this.height / 4 + 24 + (-32);
         this.initColors();
-        this.initLeftWidgets(widgetWidth, widgetHeight, margin);
-        this.initRightWidgets(widgetWidth, widgetHeight, margin);
+        this.initLeftWidgets(y, widgetWidth, widgetHeight, margin);
+        this.initRightWidgets(y, widgetWidth, widgetHeight, margin);
 
         this.apply_rainbow(this.mod.config.useRainbowText());
     }
 
-    private void initLeftWidgets(int widgetWidth, int widgetHeight, int margin)
+    private void initLeftWidgets(int y, int widgetWidth, int widgetHeight, int margin)
     {
+        int x = this.width / 4 - widgetWidth / 2;
         var container = new SpruceContainerWidget(Position.origin(), width, (widgetHeight + margin) * 4); // Width/height and position may need to be tweaked
-        container.addChild(this.frOption.createWidget(Position.origin(), widgetWidth));
-        container.addChild(this.fgOption.createWidget(Position.origin(), widgetWidth));
-        container.addChild(this.fbOption.createWidget(Position.origin(), widgetWidth));
-        container.addChild(this.faOption.createWidget(Position.origin(), widgetWidth));
-        container.addChild(this.configPanelOption.createWidget(Position.origin(), widgetWidth));
-        container.addChild(this.rainbowText.createWidget(Position.origin(), widgetWidth));
+        container.addChild(this.frOption.createWidget(Position.of(x, (y += widgetHeight + margin)), widgetWidth));
+        container.addChild(this.fgOption.createWidget(Position.of(x, (y += widgetHeight + margin)), widgetWidth));
+        container.addChild(this.fbOption.createWidget(Position.of(x, (y += widgetHeight + margin)), widgetWidth));
+        container.addChild(this.faOption.createWidget(Position.of(x, (y += widgetHeight + margin)), widgetWidth));
+        container.addChild(this.configPanelOption.createWidget(Position.of(x, (y += widgetHeight + margin)), widgetWidth));
+        container.addChild(this.rainbowText.createWidget(Position.of(x, (y + widgetHeight + margin)), widgetWidth));
         this.addDrawableChild(container);
     }
 
-    private void initRightWidgets(int widgetWidth, int widgetHeight, int margin)
+    private void initRightWidgets(int y, int widgetWidth, int widgetHeight, int margin)
     {
+        int x = (this.width / 4) * 3 - widgetWidth / 2;
         var container = new SpruceContainerWidget(Position.origin(), width, (widgetHeight + margin) * 4);
-        container.addChild(this.brOption.createWidget(Position.origin(), widgetWidth));
-        container.addChild(this.brOption.createWidget(Position.origin(), widgetWidth));
-        container.addChild(this.brOption.createWidget(Position.origin(), widgetWidth));
-        container.addChild(this.brOption.createWidget(Position.origin(), widgetWidth));
-        container.addChild(this.brOption.createWidget(Position.origin(), widgetWidth));
-        container.addChild(new SpruceButtonWidget(Position.origin(), widgetWidth, widgetHeight, SpruceTexts.GUI_DONE, (button) -> {
+        container.addChild(this.brOption.createWidget(Position.of(x, (y += widgetHeight + margin)), widgetWidth));
+        container.addChild(this.bgOption.createWidget(Position.of(x, (y += widgetHeight + margin)), widgetWidth));
+        container.addChild(this.bbOption.createWidget(Position.of(x, (y += widgetHeight + margin)), widgetWidth));
+        container.addChild(this.baOption.createWidget(Position.of(x, (y += widgetHeight + margin)), widgetWidth));
+        container.addChild(this.rainbowSaturation.createWidget(Position.of(x, (y += widgetHeight + margin)), widgetWidth));
+        container.addChild(new SpruceButtonWidget(Position.of(x, (y + widgetHeight + margin)), widgetWidth, widgetHeight, SpruceTexts.GUI_DONE, (button) -> {
             this.applyColors();
             this.mod.config.save();
             if (this.client != null) {
                 this.client.setScreen(this.parent);
             }
         }));
+        this.addDrawableChild(container);
     }
 
     private void initColors()
@@ -210,5 +214,10 @@ public class KeystrokesColorConfigScreen extends SpruceScreen
     @Override
     public void renderTitle(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 10, 16777215);
+        var example = new TranslatableText("keystrokes.menu.example_text");
+        int y = this.height / 4 + 24 + -16;
+        int padding = (20 - this.textRenderer.fontHeight) / 2;
+        AuroraKeystrokes.renderTextBox(matrices, this.textRenderer, (this.width / 2 - this.textRenderer.getWidth(example)
+                / 2), y / 2, padding, 20, example, new Color(r, g, b, a), new Color(br, bg, bb, ba));
     }
 }

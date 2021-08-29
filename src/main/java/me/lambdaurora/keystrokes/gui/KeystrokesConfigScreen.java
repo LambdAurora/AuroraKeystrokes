@@ -15,6 +15,8 @@ import dev.lambdaurora.spruceui.option.*;
 import dev.lambdaurora.spruceui.screen.SpruceScreen;
 import dev.lambdaurora.spruceui.widget.SpruceButtonWidget;
 import me.lambdaurora.keystrokes.AuroraKeystrokes;
+import me.lambdaurora.keystrokes.ColorConfigPanel;
+import me.lambdaurora.keystrokes.KeystrokesConfig;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.FatalErrorScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -25,9 +27,12 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 /**
  * Represents the config screen of AuroraKeystrokes.
@@ -36,8 +41,7 @@ public class KeystrokesConfigScreen extends SpruceScreen
 {
     private final AuroraKeystrokes mod;
 
-    private final SpruceOption showHudOption, resetOption;
-
+    private final SpruceOption resetOption;
     private final List<SpruceOption> leftOptions;
     private final List<SpruceOption> rightOptions;
 
@@ -126,24 +130,21 @@ public class KeystrokesConfigScreen extends SpruceScreen
         int widgetWidth = 204;
         int widgetHeight = 20;
         int margin = 4;
-        int y = this.height / 4 + 24 + -32;
-//        TranslatableText showHudText = new TranslatableText("keystrokes.menu.show_hud");
-//        this.addDrawableChild(new SpruceCheckboxBooleanOption((this.width / 2 - (24 + this.textRenderer.getWidth(showHudText)) / 2), (y - widgetHeight) - margin, widgetWidth, widgetHeight, showHudText,
-//                this.mod.config.doesRenderHud(), btn -> this.mod.setHudEnabled(isChecked())));
+        int y = this.height / 4 + 24 + (-32);
         this.initLeftWidgets(y, widgetWidth, widgetHeight, margin);
         this.initRightWidgets(y, widgetWidth, widgetHeight, margin);
     }
 
     private void initLeftWidgets(int y, int widgetWidth, int widgetHeight, int margin)
     {
+        int x = this.width / 4 - widgetWidth / 2;
         for (SpruceOption option : this.leftOptions) {
-            this.addDrawableChild(option.createWidget(Position.origin(), widgetWidth));
+            this.addDrawableChild(option.createWidget(Position.of(x, y), widgetWidth));
             y += widgetHeight + margin;
         }
     }
 
-    private void initRightWidgets(int y, int widgetWidth, int widgetHeight, int margin)
-    {
+    private void initRightWidgets(int y, int widgetWidth, int widgetHeight, int margin) {
         int x = (this.width / 4) * 3 - widgetWidth / 2;
         this.addDrawableChild(new ButtonWidget(x, y, widgetWidth, widgetHeight, new TranslatableText("keystrokes.menu.open_color_config"), (button) -> {
             this.mod.config.save();
@@ -155,17 +156,17 @@ public class KeystrokesConfigScreen extends SpruceScreen
         y += widgetHeight + margin;
         for (SpruceOption option : this.rightOptions) {
             if (option != null)
-                this.addDrawableChild(option.createWidget(Position.origin(), widgetWidth));
+                this.addDrawableChild(option.createWidget(Position.of(x, y), widgetWidth));
             y += widgetHeight + margin;
         }
 
-        this.addDrawableChild(new SpruceButtonWidget(Position.origin(), widgetWidth, widgetHeight, SpruceTexts.GUI_DONE, (button) -> {
+        this.addDrawableChild(new SpruceButtonWidget(Position.of(x, y), widgetWidth, widgetHeight, SpruceTexts.GUI_DONE, (button) -> {
             this.mod.config.save();
             if (this.client != null) {
                 this.client.setScreen(null);
             }
         }));
-        this.addDrawableChild(this.resetOption.createWidget(Position.origin(), widgetWidth));
+        this.addDrawableChild(this.resetOption.createWidget(Position.of(x, y + (widgetHeight + margin) * 2), widgetWidth));
     }
 
     @Override
