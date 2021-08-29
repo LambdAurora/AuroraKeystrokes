@@ -59,8 +59,7 @@ public class KeystrokesColorConfigScreen extends SpruceScreen
                 amount -> {
                     this.applyColors();
                     this.panel = this.panel.next();
-                    this.buttons.clear();
-                    this.children.clear();
+                    this.children().clear();
                     this.init();
                 },
                 option -> option.getDisplayText(this.panel.getText()),

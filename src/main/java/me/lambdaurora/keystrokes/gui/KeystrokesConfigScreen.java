@@ -17,6 +17,7 @@ import dev.lambdaurora.spruceui.widget.SpruceButtonWidget;
 import me.lambdaurora.keystrokes.AuroraKeystrokes;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.FatalErrorScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
@@ -35,13 +36,12 @@ public class KeystrokesConfigScreen extends SpruceScreen
 {
     private final AuroraKeystrokes mod;
 
-    private final SpruceOption resetOption;
+    private final SpruceOption showHudOption, resetOption;
 
     private final List<SpruceOption> leftOptions;
     private final List<SpruceOption> rightOptions;
 
-    public KeystrokesConfigScreen(@NotNull AuroraKeystrokes mod)
-    {
+    public KeystrokesConfigScreen(@NotNull AuroraKeystrokes mod) {
         super(new TranslatableText("keystrokes.menu.title.main"));
         this.mod = mod;
 
@@ -93,6 +93,8 @@ public class KeystrokesConfigScreen extends SpruceScreen
                 option -> option.getDisplayText(new TranslatableText("keystrokes.layout." + this.mod.config.getLayout().getName())),
                 null));
 
+        this.showHudOption = new SpruceCheckboxBooleanOption("keystrokes.menu.show_hud", this.mod.config::doesRenderHud, this.mod::setHudEnabled, null);
+
         this.resetOption = SpruceSimpleActionOption.reset(btn -> {
             if (this.client != null) {
                 this.client.setScreen(new ConfirmScreen(confirm -> {
@@ -125,9 +127,9 @@ public class KeystrokesConfigScreen extends SpruceScreen
         int widgetHeight = 20;
         int margin = 4;
         int y = this.height / 4 + 24 + -32;
-        TranslatableText showHudText = new TranslatableText("keystrokes.menu.show_hud");
-        this.addDrawableChild(new SpruceCheckboxBooleanOption((this.width / 2 - (24 + this.textRenderer.getWidth(showHudText)) / 2), (y - widgetHeight) - margin, widgetWidth, widgetHeight, showHudText,
-                this.mod.config.doesRenderHud(), btn -> this.mod.setHudEnabled(btn.isChecked())));
+//        TranslatableText showHudText = new TranslatableText("keystrokes.menu.show_hud");
+//        this.addDrawableChild(new SpruceCheckboxBooleanOption((this.width / 2 - (24 + this.textRenderer.getWidth(showHudText)) / 2), (y - widgetHeight) - margin, widgetWidth, widgetHeight, showHudText,
+//                this.mod.config.doesRenderHud(), btn -> this.mod.setHudEnabled(isChecked())));
         this.initLeftWidgets(y, widgetWidth, widgetHeight, margin);
         this.initRightWidgets(y, widgetWidth, widgetHeight, margin);
     }
