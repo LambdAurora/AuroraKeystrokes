@@ -119,9 +119,9 @@ public class KeystrokesColorConfigScreen extends Screen
     {
         this.mod.config.setRainbowText(newValue);
 
-        this.foregroundButtons.forEach(button -> button.setActive(true));
+        this.foregroundButtons.forEach(button -> button.setActive(newValue));
         if (this.rainbowSaturationButton != null)
-            this.rainbowSaturationButton.setActive(true);
+            this.rainbowSaturationButton.setActive(newValue);
     }
 
     @Override
