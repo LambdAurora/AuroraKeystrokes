@@ -9,11 +9,11 @@
 
 package me.lambdaurora.keystrokes.gui;
 
+import dev.lambdaurora.spruceui.hud.Hud;
 import me.lambdaurora.keystrokes.AuroraKeystrokes;
 import me.lambdaurora.keystrokes.LayoutMode;
-import me.lambdaurora.spruceui.hud.Hud;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.options.KeyBinding;
+import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;

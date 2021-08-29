@@ -9,9 +9,9 @@
 
 package me.lambdaurora.keystrokes;
 
+import dev.lambdaurora.spruceui.hud.HudManager;
 import me.lambdaurora.keystrokes.command.KeystrokesCommand;
 import me.lambdaurora.keystrokes.gui.KeystrokesHud;
-import me.lambdaurora.spruceui.hud.HudManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.minecraft.client.font.TextRenderer;
