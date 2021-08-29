@@ -12,6 +12,7 @@ package me.lambdaurora.keystrokes.gui;
 import dev.lambdaurora.spruceui.Position;
 import dev.lambdaurora.spruceui.SpruceTexts;
 import dev.lambdaurora.spruceui.option.*;
+import dev.lambdaurora.spruceui.screen.SpruceScreen;
 import dev.lambdaurora.spruceui.widget.SpruceButtonWidget;
 import me.lambdaurora.keystrokes.AuroraKeystrokes;
 import net.minecraft.client.gui.screen.ConfirmScreen;
@@ -31,7 +32,7 @@ import java.util.List;
 /**
  * Represents the config screen of AuroraKeystrokes.
  */
-public class KeystrokesConfigScreen extends Screen
+public class KeystrokesConfigScreen extends SpruceScreen
 {
     private final AuroraKeystrokes mod;
 
@@ -167,13 +168,7 @@ public class KeystrokesConfigScreen extends Screen
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
-    {
-        //this.renderBackground(matrices);
+    public void renderTitle(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 10, 16777215);
-
-        //super.render(matrices, mouseX, mouseY, delta);
-
-        //Tooltip.renderAll(matrices);
     }
 }

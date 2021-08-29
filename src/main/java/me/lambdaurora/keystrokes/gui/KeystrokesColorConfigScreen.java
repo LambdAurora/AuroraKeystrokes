@@ -15,6 +15,7 @@ import dev.lambdaurora.spruceui.option.SpruceBooleanOption;
 import dev.lambdaurora.spruceui.option.SpruceCyclingOption;
 import dev.lambdaurora.spruceui.option.SpruceDoubleOption;
 import dev.lambdaurora.spruceui.option.SpruceOption;
+import dev.lambdaurora.spruceui.screen.SpruceScreen;
 import dev.lambdaurora.spruceui.widget.SpruceButtonWidget;
 import dev.lambdaurora.spruceui.widget.container.SpruceContainerWidget;
 import me.lambdaurora.keystrokes.AuroraKeystrokes;
@@ -34,7 +35,7 @@ import java.util.function.Function;
 /**
  * Represents the color configuration screen.
  */
-public class KeystrokesColorConfigScreen extends Screen
+public class KeystrokesColorConfigScreen extends SpruceScreen
 {
     private final AuroraKeystrokes mod;
     private final Screen           parent;
@@ -228,18 +229,7 @@ public class KeystrokesColorConfigScreen extends Screen
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
-    {
-        //this.renderBackground(matrices);
+    public void renderTitle(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 10, 16777215);
-
-        //TranslatableText example = new TranslatableText("keystrokes.menu.example_text");
-        //int y = this.height / 4 + 24 + -16;
-        //int padding = (20 - this.textRenderer.fontHeight) / 2;
-        //AuroraKeystrokes.renderTextBox(matrices, this.textRenderer, (this.width / 2 - this.textRenderer.getWidth(example) / 2), y / 2, padding, 20, example, new Color(r, g, b, a), new Color(br, bg, bb, ba));
-
-        //super.render(matrices, mouseX, mouseY, delta);
-
-        //Tooltip.renderAll(matrices);
     }
 }
