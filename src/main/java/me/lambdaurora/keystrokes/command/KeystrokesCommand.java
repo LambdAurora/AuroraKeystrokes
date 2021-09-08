@@ -16,7 +16,6 @@ import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
-import org.aperlambda.lambdacommon.utils.LambdaUtils;
 
 import java.util.Timer;
 import java.util.TimerTask;

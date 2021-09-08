@@ -23,10 +23,12 @@ repositories {
 		url 'https://maven.gegy.dev'
 	}
 	maven {
-		name = "AperLambda"
-		url = 'https://aperlambda.github.io/maven'
+		name "AperLambda"
+		url 'https://aperlambda.github.io/maven'
 	}
-	maven { url = "https://jitpack.io" }
+	maven {
+		url "https://jitpack.io"
+	}
 }
 
 configurations {
