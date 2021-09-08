@@ -41,7 +41,7 @@ public class KeystrokesConfigScreen extends SpruceScreen
 {
     private final AuroraKeystrokes mod;
 
-    private final SpruceOption resetOption;
+    private final SpruceOption showHudOption, resetOption;
     private final List<SpruceOption> leftOptions;
     private final List<SpruceOption> rightOptions;
 
