@@ -14,13 +14,13 @@ import me.lambdaurora.keystrokes.command.KeystrokesCommand;
 import me.lambdaurora.keystrokes.gui.KeystrokesHud;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.aperlambda.lambdacommon.utils.LambdaUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -33,22 +33,27 @@ import java.util.Timer;
  * @version 1.2.4
  * @since 1.0.0
  */
-public class AuroraKeystrokes implements ClientModInitializer
-{
-    public static final String           NAMESPACE = "aurorakeystrokes";
-    private static      AuroraKeystrokes INSTANCE;
-    public final        Logger           logger    = LogManager.getLogger("AuroraKeystrokes");
-    public final        KeystrokesConfig config    = new KeystrokesConfig(this);
-    private             KeystrokesHud    hud;
-    public              int              cps       = 0;
+public class AuroraKeystrokes implements ClientModInitializer {
+    public static final String NAMESPACE = "aurorakeystrokes";
+    private static AuroraKeystrokes INSTANCE;
+    public final Logger logger = LogManager.getLogger("AuroraKeystrokes");
+    public final KeystrokesConfig config = new KeystrokesConfig(this);
+    private KeystrokesHud hud;
+    public int cps = 0;
+    private long lastTime = 0;
 
     @Override
-    public void onInitializeClient()
-    {
+    public void onInitializeClient() {
         INSTANCE = this;
         log("Initializing AuroraKeystrokes...");
         this.config.load();
-        new Timer().scheduleAtFixedRate(LambdaUtils.newTimerTaskFromLambda(() -> this.cps = 0), 0, 1000);
+        ClientTickEvents.START_CLIENT_TICK.register(client -> {
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastTime >= 1000) {
+                this.cps = 0;
+                this.lastTime = currentTime;
+            }
+        });
 
         HudManager.register(this.hud = new KeystrokesHud(this));
         this.hud.setVisible(this.config.doesRenderHud());
@@ -61,13 +66,11 @@ public class AuroraKeystrokes implements ClientModInitializer
      *
      * @param info The message to print.
      */
-    public void log(String info)
-    {
+    public void log(String info) {
         this.logger.info("[AuroraKeystrokes] " + info);
     }
 
-    public static AuroraKeystrokes get()
-    {
+    public static AuroraKeystrokes get() {
         return INSTANCE;
     }
 
@@ -76,8 +79,7 @@ public class AuroraKeystrokes implements ClientModInitializer
      *
      * @param enabled True if the HUD is enabled, else false.
      */
-    public void setHudEnabled(boolean enabled)
-    {
+    public void setHudEnabled(boolean enabled) {
         this.config.setRenderHud(enabled);
         this.hud.setVisible(enabled);
     }
@@ -88,8 +90,7 @@ public class AuroraKeystrokes implements ClientModInitializer
      * @param hex The hexadecimal color.
      * @return The color instance, null if invalid.
      */
-    public static Color parseColor(String hex)
-    {
+    public static Color parseColor(String hex) {
         hex = hex.replace("#", "");
         return switch (hex.length()) {
             case 6 -> new Color(
@@ -105,16 +106,14 @@ public class AuroraKeystrokes implements ClientModInitializer
         };
     }
 
-    public static int getRainbowRGB(double x, double y)
-    {
+    public static int getRainbowRGB(double x, double y) {
         float speed = 2600.0F;
         return Color.HSBtoRGB((float) ((System.currentTimeMillis() - x * 10.0D - y * 10.0D) % speed) / speed,
                 (float) AuroraKeystrokes.get().config.getRainbowSaturation(),
                 0.9F);
     }
 
-    public static void drawRainbowString(MatrixStack matrices, TextRenderer textRenderer, int x, int y, @NotNull String text)
-    {
+    public static void drawRainbowString(MatrixStack matrices, TextRenderer textRenderer, int x, int y, @NotNull String text) {
         for (char c : text.toCharArray()) {
             int rgb = getRainbowRGB(x, y);
             String tmp = String.valueOf(c);
@@ -136,8 +135,7 @@ public class AuroraKeystrokes implements ClientModInitializer
      * @param background   The background color of the box.
      * @return The width of the box.
      */
-    public static int renderTextBox(MatrixStack matrices, TextRenderer textRenderer, int x, int y, int padding, int boxHeight, @NotNull Text text, @NotNull Color foreground, @NotNull Color background)
-    {
+    public static int renderTextBox(MatrixStack matrices, TextRenderer textRenderer, int x, int y, int padding, int boxHeight, @NotNull Text text, @NotNull Color foreground, @NotNull Color background) {
         int textLength = textRenderer.getWidth(text);
         int boxWidth = padding * 2 + textLength;
         DrawableHelper.fill(matrices, x, y, x + boxWidth, y + boxHeight, background.getRGB());

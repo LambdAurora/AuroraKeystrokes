@@ -9,7 +9,7 @@
 
 package me.lambdaurora.keystrokes;
 
-import org.aperlambda.lambdacommon.utils.Nameable;
+import dev.lambdaurora.spruceui.util.Nameable;
 import org.jetbrains.annotations.NotNull;
 
 public enum LayoutMode implements Nameable

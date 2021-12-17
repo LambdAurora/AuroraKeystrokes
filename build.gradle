@@ -24,10 +24,6 @@ repositories {
 		url 'https://maven.gegy.dev'
 	}
 	maven {
-		name "AperLambda"
-		url 'https://aperlambda.github.io/maven'
-	}
-	maven {
 		url "https://jitpack.io"
 	}
 }
@@ -50,12 +46,6 @@ dependencies {
 
 	shadow 'com.electronwill.night-config:core:3.6.5'
 	shadow 'com.electronwill.night-config:toml:3.6.5'
-
-	shadow("org.aperlambda:lambdajcommon:1.8.1") {
-		// Minecraft already has all that google crap.
-		exclude group: 'com.google.code.gson'
-		exclude group: 'com.google.guava'
-	}
 }
 
 java {
