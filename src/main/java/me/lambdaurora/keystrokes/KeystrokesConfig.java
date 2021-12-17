@@ -19,7 +19,7 @@ import java.awt.*;
  */
 public class KeystrokesConfig
 {
-    private final FileConfig       config          = FileConfig.builder("config/keystrokes.toml").concurrent().defaultResource("/config.toml").build();
+    private final FileConfig config          = FileConfig.builder("config/keystrokes.toml").concurrent().defaultResource("/config.toml").build();
     private final AuroraKeystrokes mod;
     private       TextDisplayMode  textDisplayMode = TextDisplayMode.ACTION_NAME;
 

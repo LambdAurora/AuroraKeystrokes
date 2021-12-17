@@ -1,9 +1,13 @@
-import net.fabricmc.loom.task.RemapJarTask
-
+//file:noinspection GroovyAssignabilityCheck
 plugins {
-	id 'fabric-loom' version '0.4-SNAPSHOT'
+	id 'fabric-loom' version '0.10.+'
+	id 'io.github.juuxel.loom-quiltflower-mini' version '1.2.1'
+	id 'java-library'
 	id 'maven-publish'
+	id 'com.github.johnrengelman.shadow' version '7.1.0'
 }
+
+import net.fabricmc.loom.task.RemapJarTask
 
 group = project.maven_group
 version = "${project.mod_version}+${project.minecraft_version}"
@@ -16,99 +20,90 @@ repositories {
 	mavenLocal()
     mavenCentral()
 	maven {
-		name = "AperLambda"
-		url = 'https://aperlambda.github.io/maven'
+		name 'Gegy'
+		url 'https://maven.gegy.dev'
 	}
-	maven { url = "https://jitpack.io" }
+	maven {
+		url "https://jitpack.io"
+	}
 }
 
 configurations {
 	shadow
-	implementation.extendsFrom shadow
+	api.extendsFrom shadow
 }
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}"
+	mappings "net.fabricmc:yarn:${project.minecraft_version}+build.${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modImplementation "com.github.lambdaurora:spruceui:${project.spruceui_version}"
-	include "com.github.lambdaurora:spruceui:${project.spruceui_version}"
+	modImplementation "dev.lambdaurora:spruceui:${project.spruceui_version}"
+	include "dev.lambdaurora:spruceui:${project.spruceui_version}"
 
-	shadow "com.electronwill.night-config:core:3.6.3"
-	shadow "com.electronwill.night-config:toml:3.6.3"
+	shadow 'com.electronwill.night-config:core:3.6.5'
+	shadow 'com.electronwill.night-config:toml:3.6.5'
+}
 
-	shadow("org.aperlambda:lambdajcommon:1.8.0") {
-		// Minecraft already has all that google crap.
-		exclude group: 'com.google.code.gson'
-		exclude group: 'com.google.guava'
-	}
+java {
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
+
+	withSourcesJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.encoding = "UTF-8"
+
+	it.options.release.set(17)
 }
 
 processResources {
 	inputs.property "version", project.version
 
-	from(sourceSets.main.resources.srcDirs) {
-		include "fabric.mod.json"
+	filesMatching("fabric.mod.json") {
 		expand "version": project.version
 	}
-
-	from(sourceSets.main.resources.srcDirs) {
-		exclude "fabric.mod.json"
-	}
-}
-
-tasks.withType(JavaCompile) {
-	options.encoding = "UTF-8"
-}
-
-java {
-	sourceCompatibility = JavaVersion.VERSION_1_8
-	targetCompatibility = JavaVersion.VERSION_1_8
-
-	withSourcesJar()
 }
 
 jar {
-	from "LICENSE"
-}
-
-task shadowJar(type: Jar) {
-	archiveClassifier.set("dev")
-
-	from sourceSets.main.output
-
-	from {
-		configurations.shadow.collect {
-			it.isDirectory() ? it : zipTree(it)
-		}
+	from("LICENSE") {
+		rename { "${it}_${project.archivesBaseName}"}
 	}
 }
+
+shadowJar {
+	dependsOn jar
+	configurations = [project.configurations.shadow]
+	archiveClassifier.set("dev")
+
+	relocate "com.electronwill.nightconfig", "dev.lambdaurora.aurorakeystrokes.shadow.nightconfig"
+}
+remapJar.dependsOn(shadowJar)
 
 task shadowRemapJar(type: RemapJarTask) {
 	dependsOn shadowJar
 
-	input = file("${project.buildDir}/libs/$archivesBaseName-$version-dev.jar")
-	archiveName = "${archivesBaseName}-${version}.jar"
-	addNestedDependencies = true
+	input = file("${project.buildDir}/libs/$archivesBaseName-${project.version}-dev.jar")
+	archiveName = "${archivesBaseName}-${project.version}.jar"
+	addNestedDependencies.set(true)
 }
+build.dependsOn(shadowRemapJar)
 
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
-			artifact(remapJar) {
-				builtBy remapJar
-			}
-			artifact(sourcesJar) {
-				builtBy remapSourcesJar
-			}
+			from components.java
 		}
 	}
 
 	repositories {
 		mavenLocal()
 	}
+}
+quiltflower {
+	addToRuntimeClasspath.set(true)
 }

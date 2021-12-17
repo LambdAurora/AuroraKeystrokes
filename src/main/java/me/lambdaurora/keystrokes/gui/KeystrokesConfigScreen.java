@@ -9,17 +9,15 @@
 
 package me.lambdaurora.keystrokes.gui;
 
+import dev.lambdaurora.spruceui.Position;
+import dev.lambdaurora.spruceui.SpruceTexts;
+import dev.lambdaurora.spruceui.option.*;
+import dev.lambdaurora.spruceui.screen.SpruceScreen;
+import dev.lambdaurora.spruceui.widget.SpruceButtonWidget;
 import me.lambdaurora.keystrokes.AuroraKeystrokes;
-import me.lambdaurora.spruceui.SpruceButtonWidget;
-import me.lambdaurora.spruceui.SpruceCheckboxWidget;
-import me.lambdaurora.spruceui.SpruceTexts;
-import me.lambdaurora.spruceui.Tooltip;
-import me.lambdaurora.spruceui.option.*;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.FatalErrorScreen;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.options.Option;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
@@ -33,17 +31,15 @@ import java.util.List;
 /**
  * Represents the config screen of AuroraKeystrokes.
  */
-public class KeystrokesConfigScreen extends Screen
+public class KeystrokesConfigScreen extends SpruceScreen
 {
     private final AuroraKeystrokes mod;
 
-    private final Option resetOption;
+    private final SpruceOption showHudOption, resetOption;
+    private final List<SpruceOption> leftOptions;
+    private final List<SpruceOption> rightOptions;
 
-    private final List<Option> leftOptions;
-    private final List<Option> rightOptions;
-
-    public KeystrokesConfigScreen(@NotNull AuroraKeystrokes mod)
-    {
+    public KeystrokesConfigScreen(@NotNull AuroraKeystrokes mod) {
         super(new TranslatableText("keystrokes.menu.title.main"));
         this.mod = mod;
 
@@ -95,16 +91,22 @@ public class KeystrokesConfigScreen extends Screen
                 option -> option.getDisplayText(new TranslatableText("keystrokes.layout." + this.mod.config.getLayout().getName())),
                 null));
 
-        this.resetOption = new SpruceResetOption(btn -> this.client.openScreen(new ConfirmScreen(confirm -> {
-            if (confirm) {
-                if (new File("config/keystrokes.toml").delete()) {
-                    this.mod.config.load();
-                    this.client.openScreen(new KeystrokesConfigScreen(this.mod));
-                } else {
-                    this.client.openScreen(new FatalErrorScreen(SpruceTexts.RESET_TEXT, new TranslatableText("keystrokes.error.cannot_reset")));
-                }
-            } else this.client.openScreen(this);
-        }, SpruceTexts.RESET_TEXT, new TranslatableText("keystrokes.menu.confirm_reset"))));
+        this.showHudOption = new SpruceCheckboxBooleanOption("keystrokes.menu.show_hud", this.mod.config::doesRenderHud, this.mod::setHudEnabled, null);
+
+        this.resetOption = SpruceSimpleActionOption.reset(btn -> {
+            if (this.client != null) {
+                this.client.setScreen(new ConfirmScreen(confirm -> {
+                    if (confirm) {
+                        if (new File("config/keystrokes.toml").delete()) {
+                            this.mod.config.load();
+                            this.client.setScreen(new KeystrokesConfigScreen(this.mod));
+                        } else {
+                            this.client.setScreen(new FatalErrorScreen(SpruceTexts.RESET_TEXT, new TranslatableText("keystrokes.error.cannot_reset")));
+                        }
+                    } else this.client.setScreen(this);
+                }, SpruceTexts.RESET_TEXT, new TranslatableText("keystrokes.menu.confirm_reset")));
+            }
+        });
     }
 
     @Override
@@ -122,10 +124,7 @@ public class KeystrokesConfigScreen extends Screen
         int widgetWidth = 204;
         int widgetHeight = 20;
         int margin = 4;
-        int y = this.height / 4 + 24 + -32;
-        TranslatableText showHudText = new TranslatableText("keystrokes.menu.show_hud");
-        this.addButton(new SpruceCheckboxWidget((this.width / 2 - (24 + this.textRenderer.getWidth(showHudText)) / 2), (y - widgetHeight) - margin, widgetWidth, widgetHeight, showHudText,
-                this.mod.config.doesRenderHud(), btn -> this.mod.setHudEnabled(btn.isChecked())));
+        int y = this.height / 4 - 8;
         this.initLeftWidgets(y, widgetWidth, widgetHeight, margin);
         this.initRightWidgets(y, widgetWidth, widgetHeight, margin);
     }
@@ -133,42 +132,39 @@ public class KeystrokesConfigScreen extends Screen
     private void initLeftWidgets(int y, int widgetWidth, int widgetHeight, int margin)
     {
         int x = this.width / 4 - widgetWidth / 2;
-        for (Option option : this.leftOptions) {
-            this.addButton(option.createButton(null, x, y, widgetWidth));
+        for (SpruceOption option : this.leftOptions) {
+            this.addDrawableChild(option.createWidget(Position.of(x, y), widgetWidth));
             y += widgetHeight + margin;
         }
     }
 
-    private void initRightWidgets(int y, int widgetWidth, int widgetHeight, int margin)
-    {
+    private void initRightWidgets(int y, int widgetWidth, int widgetHeight, int margin) {
         int x = (this.width / 4) * 3 - widgetWidth / 2;
-        this.addButton(new ButtonWidget(x, y, widgetWidth, widgetHeight, new TranslatableText("keystrokes.menu.open_color_config"), (button) -> {
+        this.addDrawableChild(new ButtonWidget(x, y, widgetWidth, widgetHeight, new TranslatableText("keystrokes.menu.open_color_config"), (button) -> {
             this.mod.config.save();
-            this.client.openScreen(new KeystrokesColorConfigScreen(this.mod, this));
+            if (this.client != null) {
+                this.client.setScreen(new KeystrokesColorConfigScreen(this.mod, this));
+            }
         }));
 
         y += widgetHeight + margin;
-        for (Option option : this.rightOptions) {
+        for (SpruceOption option : this.rightOptions) {
             if (option != null)
-                this.addButton(option.createButton(null, x, y, widgetWidth));
+                this.addDrawableChild(option.createWidget(Position.of(x, y), widgetWidth));
             y += widgetHeight + margin;
         }
 
-        this.addButton(new SpruceButtonWidget(x, y, widgetWidth, widgetHeight, SpruceTexts.GUI_DONE, (button) -> {
+        this.addDrawableChild(new SpruceButtonWidget(Position.of(x, y), widgetWidth, widgetHeight, SpruceTexts.GUI_DONE, (button) -> {
             this.mod.config.save();
-            this.client.openScreen(null);
+            if (this.client != null) {
+                this.client.setScreen(null);
+            }
         }));
-        this.addButton(this.resetOption.createButton(null, x, y + (widgetHeight + margin) * 2, widgetWidth));
+        this.addDrawableChild(this.resetOption.createWidget(Position.of(x, y + (widgetHeight + margin) * 2), widgetWidth));
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
-    {
-        this.renderBackground(matrices);
+    public void renderTitle(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 10, 16777215);
-
-        super.render(matrices, mouseX, mouseY, delta);
-
-        Tooltip.renderAll(matrices);
     }
 }

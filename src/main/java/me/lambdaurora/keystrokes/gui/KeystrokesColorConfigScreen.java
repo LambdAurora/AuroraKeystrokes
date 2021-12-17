@@ -9,46 +9,40 @@
 
 package me.lambdaurora.keystrokes.gui;
 
+import dev.lambdaurora.spruceui.Position;
+import dev.lambdaurora.spruceui.SpruceTexts;
+import dev.lambdaurora.spruceui.option.SpruceBooleanOption;
+import dev.lambdaurora.spruceui.option.SpruceCyclingOption;
+import dev.lambdaurora.spruceui.option.SpruceDoubleOption;
+import dev.lambdaurora.spruceui.option.SpruceOption;
+import dev.lambdaurora.spruceui.screen.SpruceScreen;
+import dev.lambdaurora.spruceui.widget.SpruceButtonWidget;
 import me.lambdaurora.keystrokes.AuroraKeystrokes;
 import me.lambdaurora.keystrokes.ColorConfigPanel;
-import me.lambdaurora.keystrokes.KeystrokesConfig;
-import me.lambdaurora.spruceui.SpruceTexts;
-import me.lambdaurora.spruceui.Tooltip;
-import me.lambdaurora.spruceui.option.SpruceBooleanOption;
-import me.lambdaurora.spruceui.option.SpruceCyclingOption;
-import me.lambdaurora.spruceui.option.SpruceDoubleOption;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.AbstractButtonWidget;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.options.Option;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
 
 /**
  * Represents the color configuration screen.
  */
-public class KeystrokesColorConfigScreen extends Screen
-{
+public class KeystrokesColorConfigScreen extends SpruceScreen {
     private final AuroraKeystrokes mod;
-    private final Screen           parent;
-    private       ColorConfigPanel panel;
-    private final Option           configPanelOption;
-    private final Option           frOption, fgOption, fbOption, faOption, brOption, bgOption, bbOption, baOption;
-    private final Option rainbowText, rainbowSaturation;
+    private final Screen parent;
+    private ColorConfigPanel panel;
+    private final SpruceOption configPanelOption;
+    private final SpruceOption frOption, fgOption, fbOption, faOption, brOption, bgOption, bbOption, baOption;
+    private final SpruceOption rainbowText, rainbowSaturation;
     private int r = 0, g = 0, b = 0, a = 0;
     private int br = 0, bg = 0, bb = 0, ba = 0;
-    private final java.util.List<AbstractButtonWidget> foreground_buttons = new ArrayList<>();
-    private       AbstractButtonWidget                 rainbowSaturationButton;
+    private final java.util.List<SpruceButtonWidget> foregroundButtons = new ArrayList<>();
+    private SpruceButtonWidget rainbowSaturationButton;
 
-    protected KeystrokesColorConfigScreen(@NotNull AuroraKeystrokes mod, Screen parent)
-    {
+    protected KeystrokesColorConfigScreen(AuroraKeystrokes mod, Screen parent) {
         super(new TranslatableText("keystrokes.menu.title.colors"));
         this.mod = mod;
         this.parent = parent;
@@ -58,8 +52,7 @@ public class KeystrokesColorConfigScreen extends Screen
                 amount -> {
                     this.applyColors();
                     this.panel = this.panel.next();
-                    this.buttons.clear();
-                    this.children.clear();
+                    this.children().clear();
                     this.init();
                 },
                 option -> option.getDisplayText(this.panel.getText()),
@@ -115,31 +108,28 @@ public class KeystrokesColorConfigScreen extends Screen
                 new TranslatableText("keystrokes.tooltip.rainbow_saturation"));
     }
 
-    public void apply_rainbow(boolean newValue)
-    {
+    public void apply_rainbow(boolean newValue) {
         this.mod.config.setRainbowText(newValue);
 
-        this.foreground_buttons.forEach(button -> button.active = !newValue);
+        this.foregroundButtons.forEach(button -> button.setActive(newValue));
         if (this.rainbowSaturationButton != null)
-            this.rainbowSaturationButton.active = newValue;
+            this.rainbowSaturationButton.setActive(newValue);
     }
 
     @Override
-    public void onClose()
-    {
+    public void onClose() {
         super.onClose();
         this.mod.config.save();
     }
 
     @Override
-    protected void init()
-    {
+    protected void init() {
         super.init();
         this.mod.config.load();
         int widgetWidth = 204;
         int widgetHeight = 20;
         int margin = 4;
-        int y = this.height / 4 + 24 + -32;
+        int y = this.height / 4 - 8;
         this.initColors();
         this.initLeftWidgets(y, widgetWidth, widgetHeight, margin);
         this.initRightWidgets(y, widgetWidth, widgetHeight, margin);
@@ -147,36 +137,34 @@ public class KeystrokesColorConfigScreen extends Screen
         this.apply_rainbow(this.mod.config.useRainbowText());
     }
 
-    private void initLeftWidgets(int y, int widgetWidth, int widgetHeight, int margin)
-    {
-        int x = this.width / 4 - widgetWidth / 2;
-        this.foreground_buttons.clear();
-        this.addButton(this.frOption.createButton(null, x, (y += widgetHeight + margin), widgetWidth));
-        this.addButton(this.fgOption.createButton(null, x, (y += widgetHeight + margin), widgetWidth));
-        this.addButton(this.fbOption.createButton(null, x, (y += widgetHeight + margin), widgetWidth));
-        this.addButton(this.faOption.createButton(null, x, (y += widgetHeight + margin), widgetWidth));
-        this.foreground_buttons.addAll(this.buttons);
-        this.addButton(this.rainbowText.createButton(null, x, (y += widgetHeight + margin), widgetWidth));
-        this.addButton(this.configPanelOption.createButton(null, x, (y + widgetHeight + margin), widgetWidth));
+    private void initLeftWidgets(int y, int widgetWidth, int widgetHeight, int margin) {
+        int x = (this.width / 4) - widgetWidth / 2;
+        this.addDrawableChild(this.frOption.createWidget(Position.of(x, (y += widgetHeight + margin)), widgetWidth));
+        this.addDrawableChild(this.fgOption.createWidget(Position.of(x, (y += widgetHeight + margin)), widgetWidth));
+        this.addDrawableChild(this.fbOption.createWidget(Position.of(x, (y += widgetHeight + margin)), widgetWidth));
+        this.addDrawableChild(this.faOption.createWidget(Position.of(x, (y += widgetHeight + margin)), widgetWidth));
+        this.addSelectableChild(this.configPanelOption.createWidget(Position.of(x, (y += widgetHeight + margin)), widgetWidth));
+        this.addSelectableChild(this.rainbowText.createWidget(Position.of(x, (y + widgetHeight + margin)), widgetWidth));
+
     }
 
-    private void initRightWidgets(int y, int widgetWidth, int widgetHeight, int margin)
-    {
+    private void initRightWidgets(int y, int widgetWidth, int widgetHeight, int margin) {
         int x = (this.width / 4) * 3 - widgetWidth / 2;
-        this.addButton(this.brOption.createButton(null, x, (y += widgetHeight + margin), widgetWidth));
-        this.addButton(this.bgOption.createButton(null, x, (y += widgetHeight + margin), widgetWidth));
-        this.addButton(this.bbOption.createButton(null, x, (y += widgetHeight + margin), widgetWidth));
-        this.addButton(this.baOption.createButton(null, x, (y += widgetHeight + margin), widgetWidth));
-        this.addButton(this.rainbowSaturationButton = this.rainbowSaturation.createButton(null, x, (y += widgetHeight + margin), widgetWidth));
-        this.addButton(new ButtonWidget(x, (y += widgetHeight + margin), widgetWidth, widgetHeight, SpruceTexts.GUI_DONE, (button) -> {
+        this.addDrawableChild(this.brOption.createWidget(Position.of(x, (y += widgetHeight + margin)), widgetWidth));
+        this.addDrawableChild(this.bgOption.createWidget(Position.of(x, (y += widgetHeight + margin)), widgetWidth));
+        this.addDrawableChild(this.bbOption.createWidget(Position.of(x, (y += widgetHeight + margin)), widgetWidth));
+        this.addDrawableChild(this.baOption.createWidget(Position.of(x, (y += widgetHeight + margin)), widgetWidth));
+        this.addDrawableChild(this.rainbowSaturation.createWidget(Position.of(x, (y += widgetHeight + margin)), widgetWidth));
+        this.addSelectableChild(new SpruceButtonWidget(Position.of(x, (y + widgetHeight + margin)), widgetWidth, widgetHeight, SpruceTexts.GUI_DONE, (button) -> {
             this.applyColors();
             this.mod.config.save();
-            this.client.openScreen(this.parent);
+            if (this.client != null) {
+                this.client.setScreen(this.parent);
+            }
         }));
     }
 
-    private void initColors()
-    {
+    private void initColors() {
         Color foreground = this.panel.getColor(this.mod.config);
         this.r = foreground.getRed();
         this.g = foreground.getGreen();
@@ -189,45 +177,18 @@ public class KeystrokesColorConfigScreen extends Screen
         this.ba = background.getAlpha();
     }
 
-    private void applyColors()
-    {
+    private void applyColors() {
         this.panel.setColor(this.mod.config, new Color(r, g, b, a));
         this.panel.setBackgroundColor(this.mod.config, new Color(br, bg, bb, ba));
     }
 
-    private void applyColor(@NotNull Function<KeystrokesConfig, Color> getter, @NotNull BiConsumer<KeystrokesConfig, Color> setter, double value, char part)
-    {
-        Color color = getter.apply(this.mod.config);
-        int rgbaPart = (int) (value * 255.0);
-        switch (part) {
-            case 'r':
-                setter.accept(this.mod.config, new Color(rgbaPart, color.getGreen(), color.getBlue(), color.getAlpha()));
-                break;
-            case 'g':
-                setter.accept(this.mod.config, new Color(color.getRed(), rgbaPart, color.getBlue(), color.getAlpha()));
-                break;
-            case 'b':
-                setter.accept(this.mod.config, new Color(color.getRed(), color.getGreen(), rgbaPart, color.getAlpha()));
-                break;
-            case 'a':
-                setter.accept(this.mod.config, new Color(color.getRed(), color.getGreen(), color.getBlue(), rgbaPart));
-                break;
-        }
-    }
-
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
-    {
-        this.renderBackground(matrices);
-        this.drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 10, 16777215);
-
-        TranslatableText example = new TranslatableText("keystrokes.menu.example_text");
-        int y = this.height / 4 + 24 + -16;
+    public void renderTitle(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 10, 16777215);
+        var example = new TranslatableText("keystrokes.menu.example_text");
+        int y = this.height / 4 + 24 - 16;
         int padding = (20 - this.textRenderer.fontHeight) / 2;
-        AuroraKeystrokes.renderTextBox(matrices, this.textRenderer, (this.width / 2 - this.textRenderer.getWidth(example) / 2), y / 2, padding, 20, example, new Color(r, g, b, a), new Color(br, bg, bb, ba));
-
-        super.render(matrices, mouseX, mouseY, delta);
-
-        Tooltip.renderAll(matrices);
+        AuroraKeystrokes.renderTextBox(matrices, this.textRenderer, (this.width / 2 - this.textRenderer.getWidth(example)
+                / 2), y / 2, padding, 20, example, new Color(r, g, b, a), new Color(br, bg, bb, ba));
     }
 }

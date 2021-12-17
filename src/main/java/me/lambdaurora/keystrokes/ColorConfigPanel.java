@@ -9,9 +9,9 @@
 
 package me.lambdaurora.keystrokes;
 
+import dev.lambdaurora.spruceui.util.Nameable;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import org.aperlambda.lambdacommon.utils.Nameable;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;

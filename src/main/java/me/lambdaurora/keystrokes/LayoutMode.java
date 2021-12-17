@@ -9,7 +9,7 @@
 
 package me.lambdaurora.keystrokes;
 
-import org.aperlambda.lambdacommon.utils.Nameable;
+import dev.lambdaurora.spruceui.util.Nameable;
 import org.jetbrains.annotations.NotNull;
 
 public enum LayoutMode implements Nameable
@@ -17,7 +17,7 @@ public enum LayoutMode implements Nameable
     CROSS("cross"),
     PYRAMID("pyramid");
 
-    private String name;
+    private final String name;
 
     LayoutMode(String name)
     {
