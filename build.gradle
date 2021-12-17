@@ -1,9 +1,10 @@
+//file:noinspection GroovyAssignabilityCheck
 plugins {
-	id 'fabric-loom' version '0.9+'
-	id 'io.github.juuxel.loom-quiltflower' version '1.1.3'
+	id 'fabric-loom' version '0.10.+'
+	id 'io.github.juuxel.loom-quiltflower-mini' version '1.2.1'
 	id 'java-library'
 	id 'maven-publish'
-	id 'com.github.johnrengelman.shadow' version '7.0.0'
+	id 'com.github.johnrengelman.shadow' version '7.1.0'
 }
 
 import net.fabricmc.loom.task.RemapJarTask
@@ -47,10 +48,10 @@ dependencies {
 	modImplementation "dev.lambdaurora:spruceui:${project.spruceui_version}"
 	include "dev.lambdaurora:spruceui:${project.spruceui_version}"
 
-	shadow 'com.electronwill.night-config:core:3.6.4'
-	shadow 'com.electronwill.night-config:toml:3.6.4'
+	shadow 'com.electronwill.night-config:core:3.6.5'
+	shadow 'com.electronwill.night-config:toml:3.6.5'
 
-	shadow("org.aperlambda:lambdajcommon:1.8.0") {
+	shadow("org.aperlambda:lambdajcommon:1.8.1") {
 		// Minecraft already has all that google crap.
 		exclude group: 'com.google.code.gson'
 		exclude group: 'com.google.guava'
@@ -58,8 +59,8 @@ dependencies {
 }
 
 java {
-	sourceCompatibility = JavaVersion.VERSION_16
-	targetCompatibility = JavaVersion.VERSION_16
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
 
 	withSourcesJar()
 }
@@ -67,7 +68,7 @@ java {
 tasks.withType(JavaCompile).configureEach {
 	options.encoding = "UTF-8"
 
-	it.options.release.set(16)
+	it.options.release.set(17)
 }
 
 processResources {
@@ -105,16 +106,14 @@ build.dependsOn(shadowRemapJar)
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
-			artifact(remapJar) {
-				builtBy remapJar
-			}
-			artifact(sourcesJar) {
-				builtBy remapSourcesJar
-			}
+			from components.java
 		}
 	}
 
 	repositories {
 		mavenLocal()
 	}
+}
+quiltflower {
+	addToRuntimeClasspath.set(true)
 }

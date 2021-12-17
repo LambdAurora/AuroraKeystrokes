@@ -124,7 +124,7 @@ public class KeystrokesConfigScreen extends SpruceScreen
         int widgetWidth = 204;
         int widgetHeight = 20;
         int margin = 4;
-        int y = this.height / 4 + 24 + (-32);
+        int y = this.height / 4 - 8;
         this.initLeftWidgets(y, widgetWidth, widgetHeight, margin);
         this.initRightWidgets(y, widgetWidth, widgetHeight, margin);
     }
