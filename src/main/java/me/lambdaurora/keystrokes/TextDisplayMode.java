@@ -10,7 +10,7 @@
 package me.lambdaurora.keystrokes;
 
 import dev.lambdaurora.spruceui.util.Nameable;
-import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.option.KeyBind;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -23,21 +23,19 @@ import java.util.function.Function;
 /**
  * Represents the display modes of the text inside the keystrokes boxes.
  */
-public enum TextDisplayMode implements Nameable
-{
+public enum TextDisplayMode implements Nameable {
     ACTION_NAME(keyBinding -> new TranslatableText(keyBinding.getTranslationKey())),
     KEY_NAME(keyBinding -> {
-        Text text = keyBinding.getBoundKeyLocalizedText();
+        Text text = keyBinding.getKeyName();
         String str = text.asString();
         if (str.length() == 1)
             return new LiteralText(str.toUpperCase());
         return text;
     });
 
-    private final Function<KeyBinding, Text> nameMapper;
+    private final Function<KeyBind, Text> nameMapper;
 
-    TextDisplayMode(@NotNull Function<KeyBinding, Text> nameMapper)
-    {
+    TextDisplayMode(@NotNull Function<KeyBind, Text> nameMapper) {
         this.nameMapper = nameMapper;
     }
 
@@ -46,8 +44,7 @@ public enum TextDisplayMode implements Nameable
      *
      * @return The next available display mode.
      */
-    public TextDisplayMode next()
-    {
+    public TextDisplayMode next() {
         TextDisplayMode[] v = values();
         if (v.length == this.ordinal() + 1)
             return v[0];
@@ -59,8 +56,7 @@ public enum TextDisplayMode implements Nameable
      *
      * @return The text of this text display mode.
      */
-    public Text getText()
-    {
+    public Text getText() {
         return new TranslatableText("keystrokes.text_display_mode." + this.getName());
     }
 
@@ -70,8 +66,7 @@ public enum TextDisplayMode implements Nameable
      * @param keyBinding The specified key binding.
      * @return The text describing the key binding.
      */
-    public Text getText(KeyBinding keyBinding)
-    {
+    public Text getText(KeyBind keyBinding) {
         return this.nameMapper.apply(keyBinding);
     }
 
@@ -81,14 +76,12 @@ public enum TextDisplayMode implements Nameable
      * @param id The string identifier.
      * @return The optional text display mode.
      */
-    public static Optional<TextDisplayMode> byId(String id)
-    {
+    public static Optional<TextDisplayMode> byId(String id) {
         return Arrays.stream(values()).filter(tdm -> tdm.getName().equalsIgnoreCase(id)).findFirst();
     }
 
     @Override
-    public @NotNull String getName()
-    {
+    public @NotNull String getName() {
         return this.name().toLowerCase();
     }
 }
