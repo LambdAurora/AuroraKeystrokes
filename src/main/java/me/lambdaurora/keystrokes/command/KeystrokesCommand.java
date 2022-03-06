@@ -25,10 +25,8 @@ import static net.fabricmc.fabric.api.client.command.v1.ClientCommandManager.lit
 /**
  * Represents the client command of AuroraKeystrokes.
  */
-public class KeystrokesCommand
-{
-    public static void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher)
-    {
+public class KeystrokesCommand {
+    public static void registerCommands(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         dispatcher.register(literal("keystrokes")
                 .then(literal("reload")
                         .executes(ctx -> {

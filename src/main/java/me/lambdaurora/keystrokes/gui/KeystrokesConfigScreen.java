@@ -31,11 +31,10 @@ import java.util.List;
 /**
  * Represents the config screen of AuroraKeystrokes.
  */
-public class KeystrokesConfigScreen extends SpruceScreen
-{
+public class KeystrokesConfigScreen extends SpruceScreen {
     private final AuroraKeystrokes mod;
 
-    private final SpruceOption showHudOption, resetOption;
+    private final SpruceOption resetOption;
     private final List<SpruceOption> leftOptions;
     private final List<SpruceOption> rightOptions;
 
@@ -91,7 +90,7 @@ public class KeystrokesConfigScreen extends SpruceScreen
                 option -> option.getDisplayText(new TranslatableText("keystrokes.layout." + this.mod.config.getLayout().getName())),
                 null));
 
-        this.showHudOption = new SpruceCheckboxBooleanOption("keystrokes.menu.show_hud", this.mod.config::doesRenderHud, this.mod::setHudEnabled, null);
+        SpruceOption showHudOption = new SpruceCheckboxBooleanOption("keystrokes.menu.show_hud", this.mod.config::doesRenderHud, this.mod::setHudEnabled, null);
 
         this.resetOption = SpruceSimpleActionOption.reset(btn -> {
             if (this.client != null) {
@@ -110,15 +109,13 @@ public class KeystrokesConfigScreen extends SpruceScreen
     }
 
     @Override
-    public void onClose()
-    {
+    public void onClose() {
         super.onClose();
         this.mod.config.save();
     }
 
     @Override
-    protected void init()
-    {
+    protected void init() {
         super.init();
         this.mod.config.load();
         int widgetWidth = 204;
@@ -129,8 +126,7 @@ public class KeystrokesConfigScreen extends SpruceScreen
         this.initRightWidgets(y, widgetWidth, widgetHeight, margin);
     }
 
-    private void initLeftWidgets(int y, int widgetWidth, int widgetHeight, int margin)
-    {
+    private void initLeftWidgets(int y, int widgetWidth, int widgetHeight, int margin) {
         int x = this.width / 4 - widgetWidth / 2;
         for (SpruceOption option : this.leftOptions) {
             this.addDrawableChild(option.createWidget(Position.of(x, y), widgetWidth));

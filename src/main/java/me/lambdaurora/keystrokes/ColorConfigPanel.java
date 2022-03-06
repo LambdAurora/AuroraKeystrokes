@@ -19,48 +19,39 @@ import java.awt.*;
 /**
  * Represents panels for the color config screen.
  */
-public enum ColorConfigPanel implements Nameable
-{
+public enum ColorConfigPanel implements Nameable {
     NORMAL(),
     PRESSED() {
-        public Color getColor(@NotNull KeystrokesConfig config)
-        {
+        public Color getColor(@NotNull KeystrokesConfig config) {
             return config.getColorPressed();
         }
 
-        public void setColor(@NotNull KeystrokesConfig config, @NotNull Color color)
-        {
+        public void setColor(@NotNull KeystrokesConfig config, @NotNull Color color) {
             config.setColorPressed(color);
         }
 
-        public Color getBackgroundColor(@NotNull KeystrokesConfig config)
-        {
+        public Color getBackgroundColor(@NotNull KeystrokesConfig config) {
             return config.getBackgroundPressed();
         }
 
-        public void setBackgroundColor(@NotNull KeystrokesConfig config, @NotNull Color color)
-        {
+        public void setBackgroundColor(@NotNull KeystrokesConfig config, @NotNull Color color) {
             config.setBackgroundPressed(color);
         }
     };
 
-    public Color getColor(@NotNull KeystrokesConfig config)
-    {
+    public Color getColor(@NotNull KeystrokesConfig config) {
         return config.getColorNormal();
     }
 
-    public void setColor(@NotNull KeystrokesConfig config, @NotNull Color color)
-    {
+    public void setColor(@NotNull KeystrokesConfig config, @NotNull Color color) {
         config.setColorNormal(color);
     }
 
-    public Color getBackgroundColor(@NotNull KeystrokesConfig config)
-    {
+    public Color getBackgroundColor(@NotNull KeystrokesConfig config) {
         return config.getBackgroundNormal();
     }
 
-    public void setBackgroundColor(@NotNull KeystrokesConfig config, @NotNull Color color)
-    {
+    public void setBackgroundColor(@NotNull KeystrokesConfig config, @NotNull Color color) {
         config.setBackgroundNormal(color);
     }
 
@@ -69,8 +60,7 @@ public enum ColorConfigPanel implements Nameable
      *
      * @return The next available color config panel.
      */
-    public ColorConfigPanel next()
-    {
+    public ColorConfigPanel next() {
         ColorConfigPanel[] v = values();
         if (v.length == this.ordinal() + 1)
             return v[0];
@@ -82,14 +72,12 @@ public enum ColorConfigPanel implements Nameable
      *
      * @return The text of this color config panel.
      */
-    public Text getText()
-    {
+    public Text getText() {
         return new TranslatableText("keystrokes.color_config_panel." + this.getName());
     }
 
     @Override
-    public @NotNull String getName()
-    {
+    public @NotNull String getName() {
         return this.name().toLowerCase();
     }
 }

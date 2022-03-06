@@ -10,7 +10,7 @@
 package me.lambdaurora.keystrokes;
 
 import dev.lambdaurora.spruceui.util.Nameable;
-import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.option.KeyBind;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -27,16 +27,16 @@ public enum TextDisplayMode implements Nameable
 {
     ACTION_NAME(keyBinding -> new TranslatableText(keyBinding.getTranslationKey())),
     KEY_NAME(keyBinding -> {
-        Text text = keyBinding.getBoundKeyLocalizedText();
+        Text text = keyBinding.getKeyName();
         String str = text.asString();
         if (str.length() == 1)
             return new LiteralText(str.toUpperCase());
         return text;
     });
 
-    private final Function<KeyBinding, Text> nameMapper;
+    private final Function<KeyBind, Text> nameMapper;
 
-    TextDisplayMode(@NotNull Function<KeyBinding, Text> nameMapper)
+    TextDisplayMode(@NotNull Function<KeyBind, Text> nameMapper)
     {
         this.nameMapper = nameMapper;
     }
@@ -70,7 +70,7 @@ public enum TextDisplayMode implements Nameable
      * @param keyBinding The specified key binding.
      * @return The text describing the key binding.
      */
-    public Text getText(KeyBinding keyBinding)
+    public Text getText(KeyBind keyBinding)
     {
         return this.nameMapper.apply(keyBinding);
     }

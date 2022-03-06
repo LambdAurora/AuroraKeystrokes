@@ -12,25 +12,23 @@ package me.lambdaurora.keystrokes;
 import dev.lambdaurora.spruceui.util.Nameable;
 import org.jetbrains.annotations.NotNull;
 
-public enum LayoutMode implements Nameable
-{
+public enum LayoutMode implements Nameable {
     CROSS("cross"),
     PYRAMID("pyramid");
 
     private final String name;
 
-    LayoutMode(String name)
-    {
+    LayoutMode(String name) {
         this.name = name;
     }
 
     /**
      * Returns the layout mode from its name.
+     *
      * @param name The layout name.
      * @return The layout.
      */
-    public static LayoutMode fromName(@NotNull String name)
-    {
+    public static LayoutMode fromName(@NotNull String name) {
         for (LayoutMode layout : LayoutMode.values()) {
             if (layout.getName().equals(name))
                 return layout;
@@ -43,8 +41,7 @@ public enum LayoutMode implements Nameable
      *
      * @return The next layout display mode.
      */
-    public LayoutMode next()
-    {
+    public LayoutMode next() {
         LayoutMode[] v = values();
         if (v.length == this.ordinal() + 1)
             return v[0];
@@ -52,8 +49,7 @@ public enum LayoutMode implements Nameable
     }
 
     @Override
-    public @NotNull String getName()
-    {
+    public @NotNull String getName() {
         return this.name;
     }
 }
