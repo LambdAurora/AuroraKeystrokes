@@ -13,8 +13,6 @@ import dev.lambdaurora.spruceui.hud.HudManager;
 import me.lambdaurora.keystrokes.command.KeystrokesCommand;
 import me.lambdaurora.keystrokes.gui.KeystrokesHud;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
@@ -22,6 +20,8 @@ import net.minecraft.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.quiltmc.qsl.command.api.client.ClientCommandManager;
+import org.quiltmc.qsl.lifecycle.api.client.event.ClientTickEvents;
 
 import java.awt.*;
 
@@ -46,7 +46,7 @@ public class AuroraKeystrokes implements ClientModInitializer {
         INSTANCE = this;
         log("Initializing AuroraKeystrokes...");
         this.config.load();
-        ClientTickEvents.START_CLIENT_TICK.register(client -> {
+        ClientTickEvents.START.register(client -> {
             long currentTime = System.currentTimeMillis();
             if (currentTime - lastTime >= 1000) {
                 this.cps = 0;
@@ -57,7 +57,7 @@ public class AuroraKeystrokes implements ClientModInitializer {
         HudManager.register(this.hud = new KeystrokesHud(this));
         this.hud.setVisible(this.config.doesRenderHud());
 
-        KeystrokesCommand.registerCommands(ClientCommandManager.DISPATCHER);
+        KeystrokesCommand.registerCommands(ClientCommandManager.getDispatcher());
     }
 
     /**

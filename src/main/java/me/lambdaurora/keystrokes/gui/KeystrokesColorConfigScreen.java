@@ -22,7 +22,6 @@ import me.lambdaurora.keystrokes.ColorConfigPanel;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -43,7 +42,7 @@ public class KeystrokesColorConfigScreen extends SpruceScreen {
     private SpruceButtonWidget rainbowSaturationButton;
 
     protected KeystrokesColorConfigScreen(AuroraKeystrokes mod, Screen parent) {
-        super(new TranslatableText("keystrokes.menu.title.colors"));
+        super(Text.translatable("keystrokes.menu.title.colors"));
         this.mod = mod;
         this.parent = parent;
         this.panel = ColorConfigPanel.NORMAL;
@@ -56,7 +55,7 @@ public class KeystrokesColorConfigScreen extends SpruceScreen {
                     this.init();
                 },
                 option -> option.getDisplayText(this.panel.getText()),
-                new TranslatableText("keystrokes.tooltip.color_config_panel"));
+                Text.translatable("keystrokes.tooltip.color_config_panel"));
         this.frOption = new SpruceDoubleOption("keystrokes.menu.color_foreground_r", 0.0, 255.0, 1.0F,
                 () -> (double) this.r,
                 newValue -> this.r = newValue.intValue(),
@@ -100,12 +99,12 @@ public class KeystrokesColorConfigScreen extends SpruceScreen {
         this.rainbowText = new SpruceBooleanOption("keystrokes.menu.color.rainbow",
                 this.mod.config::useRainbowText,
                 this::apply_rainbow,
-                new TranslatableText("keystrokes.tooltip.rainbow"));
+                Text.translatable("keystrokes.tooltip.rainbow"));
         this.rainbowSaturation = new SpruceDoubleOption("keystrokes.menu.color.rainbow_saturation", 0.0, 1.0, 0.05F,
                 this.mod.config::getRainbowSaturation,
                 this.mod.config::setRainbowSaturation,
                 option -> option.getDisplayText(Text.of(option.get() == 1.0 ? "1.0" : "0." + (int) (option.get() * 100))),
-                new TranslatableText("keystrokes.tooltip.rainbow_saturation"));
+                Text.translatable("keystrokes.tooltip.rainbow_saturation"));
     }
 
     public void apply_rainbow(boolean newValue) {
@@ -117,8 +116,8 @@ public class KeystrokesColorConfigScreen extends SpruceScreen {
     }
 
     @Override
-    public void onClose() {
-        super.onClose();
+    public void closeScreen() {
+        super.closeScreen();
         this.mod.config.save();
     }
 
@@ -185,7 +184,7 @@ public class KeystrokesColorConfigScreen extends SpruceScreen {
     @Override
     public void renderTitle(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 10, 16777215);
-        var example = new TranslatableText("keystrokes.menu.example_text");
+        var example = Text.translatable("keystrokes.menu.example_text");
         int y = this.height / 4 + 24 - 16;
         int padding = (20 - this.textRenderer.fontHeight) / 2;
         AuroraKeystrokes.renderTextBox(matrices, this.textRenderer, (this.width / 2 - this.textRenderer.getWidth(example)

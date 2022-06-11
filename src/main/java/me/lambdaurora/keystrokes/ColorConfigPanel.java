@@ -11,7 +11,6 @@ package me.lambdaurora.keystrokes;
 
 import dev.lambdaurora.spruceui.util.Nameable;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -73,7 +72,7 @@ public enum ColorConfigPanel implements Nameable {
      * @return The text of this color config panel.
      */
     public Text getText() {
-        return new TranslatableText("keystrokes.color_config_panel." + this.getName());
+        return Text.translatable("keystrokes.color_config_panel." + this.getName());
     }
 
     @Override

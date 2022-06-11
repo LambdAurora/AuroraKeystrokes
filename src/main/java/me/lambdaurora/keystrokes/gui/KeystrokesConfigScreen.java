@@ -19,9 +19,7 @@ import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.FatalErrorScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -39,7 +37,7 @@ public class KeystrokesConfigScreen extends SpruceScreen {
     private final List<SpruceOption> rightOptions;
 
     public KeystrokesConfigScreen(@NotNull AuroraKeystrokes mod) {
-        super(new TranslatableText("keystrokes.menu.title.main"));
+        super(Text.translatable("keystrokes.menu.title.main"));
         this.mod = mod;
 
         this.leftOptions = new ArrayList<>();
@@ -47,18 +45,18 @@ public class KeystrokesConfigScreen extends SpruceScreen {
         this.leftOptions.add(new SpruceDoubleOption("keystrokes.menu.x", 0.0, 100.0, 0.5F,
                 this.mod.config::getX,
                 this.mod.config::setX,
-                option -> new LiteralText("X: " + option.get()),
-                new TranslatableText("keystrokes.tooltip.x")));
+                option -> Text.literal("X: " + option.get()),
+                Text.translatable("keystrokes.tooltip.x")));
         this.leftOptions.add(new SpruceDoubleOption("keystrokes.menu.y", 0.0, 100.0, 0.5F,
                 this.mod.config::getY,
                 this.mod.config::setY,
-                (option) -> new LiteralText("Y: " + option.get()),
-                new TranslatableText("keystrokes.tooltip.y")));
+                (option) -> Text.literal("Y: " + option.get()),
+                Text.translatable("keystrokes.tooltip.y")));
         this.leftOptions.add(new SpruceDoubleOption("keystrokes.menu.padding", 0.0, 20.0, 1.0F,
                 () -> (double) this.mod.config.getPadding(),
                 newValue -> this.mod.config.setPadding(newValue.intValue()),
                 (option) -> option.getDisplayText(Text.of(String.valueOf(option.get()))),
-                new TranslatableText("keystrokes.tooltip.padding")));
+                Text.translatable("keystrokes.tooltip.padding")));
 
         /* Boxes */
         this.leftOptions.add(new SpruceCheckboxBooleanOption("keystrokes.menu.show_movement_boxes",
@@ -77,7 +75,7 @@ public class KeystrokesConfigScreen extends SpruceScreen {
         this.rightOptions.add(new SpruceCyclingOption("keystrokes.menu.text_display_mode",
                 amount -> this.mod.config.setTextDisplayMode(this.mod.config.getTextDisplayMode().next()),
                 option -> option.getDisplayText(this.mod.config.getTextDisplayMode().getText()),
-                new TranslatableText("keystrokes.tooltip.text_display_mode")));
+                Text.translatable("keystrokes.tooltip.text_display_mode")));
 
         /* CPS */
         this.rightOptions.add(new SpruceCheckboxBooleanOption("keystrokes.menu.show_cps",
@@ -87,7 +85,7 @@ public class KeystrokesConfigScreen extends SpruceScreen {
 
         this.rightOptions.add(new SpruceCyclingOption("keystrokes.menu.layout",
                 amount -> this.mod.config.setLayout(this.mod.config.getLayout().next()),
-                option -> option.getDisplayText(new TranslatableText("keystrokes.layout." + this.mod.config.getLayout().getName())),
+                option -> option.getDisplayText(Text.translatable("keystrokes.layout." + this.mod.config.getLayout().getName())),
                 null));
 
         SpruceOption showHudOption = new SpruceCheckboxBooleanOption("keystrokes.menu.show_hud", this.mod.config::doesRenderHud, this.mod::setHudEnabled, null);
@@ -100,17 +98,17 @@ public class KeystrokesConfigScreen extends SpruceScreen {
                             this.mod.config.load();
                             this.client.setScreen(new KeystrokesConfigScreen(this.mod));
                         } else {
-                            this.client.setScreen(new FatalErrorScreen(SpruceTexts.RESET_TEXT, new TranslatableText("keystrokes.error.cannot_reset")));
+                            this.client.setScreen(new FatalErrorScreen(SpruceTexts.RESET_TEXT, Text.translatable("keystrokes.error.cannot_reset")));
                         }
                     } else this.client.setScreen(this);
-                }, SpruceTexts.RESET_TEXT, new TranslatableText("keystrokes.menu.confirm_reset")));
+                }, SpruceTexts.RESET_TEXT, Text.translatable("keystrokes.menu.confirm_reset")));
             }
         });
     }
 
     @Override
-    public void onClose() {
-        super.onClose();
+    public void closeScreen() {
+        super.closeScreen();
         this.mod.config.save();
     }
 
@@ -136,7 +134,7 @@ public class KeystrokesConfigScreen extends SpruceScreen {
 
     private void initRightWidgets(int y, int widgetWidth, int widgetHeight, int margin) {
         int x = (this.width / 4) * 3 - widgetWidth / 2;
-        this.addDrawableChild(new ButtonWidget(x, y, widgetWidth, widgetHeight, new TranslatableText("keystrokes.menu.open_color_config"), (button) -> {
+        this.addDrawableChild(new ButtonWidget(x, y, widgetWidth, widgetHeight, Text.translatable("keystrokes.menu.open_color_config"), (button) -> {
             this.mod.config.save();
             if (this.client != null) {
                 this.client.setScreen(new KeystrokesColorConfigScreen(this.mod, this));

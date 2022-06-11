@@ -11,9 +11,7 @@ package me.lambdaurora.keystrokes;
 
 import dev.lambdaurora.spruceui.util.Nameable;
 import net.minecraft.client.option.KeyBind;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -24,12 +22,12 @@ import java.util.function.Function;
  * Represents the display modes of the text inside the keystrokes boxes.
  */
 public enum TextDisplayMode implements Nameable {
-    ACTION_NAME(keyBinding -> new TranslatableText(keyBinding.getTranslationKey())),
+    ACTION_NAME(keyBinding -> Text.translatable(keyBinding.getTranslationKey())),
     KEY_NAME(keyBinding -> {
         Text text = keyBinding.getKeyName();
-        String str = text.asString();
+        String str = text.getString();
         if (str.length() == 1)
-            return new LiteralText(str.toUpperCase());
+            return Text.literal(str.toUpperCase());
         return text;
     });
 
@@ -57,7 +55,7 @@ public enum TextDisplayMode implements Nameable {
      * @return The text of this text display mode.
      */
     public Text getText() {
-        return new TranslatableText("keystrokes.text_display_mode." + this.getName());
+        return Text.translatable("keystrokes.text_display_mode." + this.getName());
     }
 
     /**

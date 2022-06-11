@@ -15,7 +15,6 @@ import me.lambdaurora.keystrokes.LayoutMode;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBind;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -129,7 +128,7 @@ public class KeystrokesHud extends Hud {
                 cpsX = this.client.getWindow().getScaledWidth() - padding - boxWidth;
                 cpsY = this.client.getWindow().getScaledHeight() - padding - boxHeight;
             }
-            AuroraKeystrokes.renderTextBox(matrices, this.client.textRenderer, cpsX, cpsY, padding, boxHeight, new LiteralText(cpsText), this.mod.config.getColorPressed(), this.mod.config.getBackgroundNormal());
+            AuroraKeystrokes.renderTextBox(matrices, this.client.textRenderer, cpsX, cpsY, padding, boxHeight, Text.literal(cpsText), this.mod.config.getColorPressed(), this.mod.config.getBackgroundNormal());
         }
     }
 

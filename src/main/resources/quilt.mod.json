@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "quilt_loader": {
+    "group": "me.lambdaurora",
+    "id": "aurora_keystrokes",
+    "version": "${version}",
+    "metadata": {
+      "name": "AuroraKeystrokes",
+      "description": "Displays the movement keys and mouse clicks on screen.",
+      "contributors": {
+        "LambdAurora": "Owner",
+        "NoComment1105": "Maintainer"
+      },
+      "icon": "assets/aurora_keystrokes/icon.png",
+      "license": "MIT",
+      "contact": {
+        "homepage": "https://www.curseforge.com/minecraft/mc-mods/aurorakeystrokes",
+        "sources": "https://github.com/LambdAurora/AuroraKeystrokes.git",
+        "issues": "https://github.com/LambdAurora/AuroraKeystrokes/issues"
+      }
+    },
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "entrypoints": {
+      "client": "me.lambdaurora.keystrokes.AuroraKeystrokes"
+    },
+    "depends": [
+      {
+        "id": "quilt_loader",
+        "versions": ">=0.16.1-"
+      },
+      {
+        "id": "quilted_fabric_api",
+        "versions": ">=2.0.0-"
+      },
+      {
+        "id": "minecraft",
+        "versions": ">=1.19"
+      },
+      {
+        "id": "spruceui",
+        "versions": ">=4.0.0"
+      }
+    ]
+  },
+  "mixin": "keystrokes.mixins.json"
+}
